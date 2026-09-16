@@ -1,0 +1,38 @@
+# ==============================================================================
+# ML-IDS Core Python Dependencies
+# Versions will be pinned during verified environment builds.
+# ==============================================================================
+
+# Core Numerical & Data Handling
+numpy
+pandas
+scipy
+pyyaml
+
+# Classical Machine Learning & Baselines
+scikit-learn
+xgboost
+
+# Deep Learning Framework (TensorFlow / Keras)
+tensorflow
+
+# Model Explainability & Interpretability (XAI)
+shap
+
+# Visualization & Reporting
+matplotlib
+seaborn
+
+# Interactive Exploration & Development
+jupyter
+notebook
+ipykernel
+
+# Quality Assurance & Testing
+pytest
+
+# ==============================================================================
+# Future Real-Time Streaming Dependencies (Phases 17-20)
+# ==============================================================================
+# scapy
+# kafka-python

@@ -1,0 +1,56 @@
+# Default Configuration Template for ML-IDS Pipeline
+# NOTE: Hyperparameters and data paths will be configured empirically in Phase 3 & 4.
+
+project:
+  name: "ML-Powered Intrusion Detection System"
+  dataset: "CICIoT2023"
+  random_seed: 42
+
+paths:
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  sample_data_dir: "data/sample"
+  model_dir: "models"
+  results_dir: "results"
+
+preprocessing:
+  # To be determined after Phase 3 dataset inspection
+  test_size: 0.15
+  val_size: 0.15
+  scaler: "StandardScaler" # Placeholder: StandardScaler / MinMaxScaler
+  handle_imbalance: false   # Strategy will be decided after class distribution analysis
+
+models:
+  random_forest:
+    n_estimators: 100
+    random_state: 42
+    n_jobs: -1
+  
+  xgboost:
+    n_estimators: 100
+    learning_rate: 0.1
+    random_state: 42
+    n_jobs: -1
+
+  cnn_1d:
+    # Architecture dimensions TBD after dataset inspection
+    epochs: 20
+    batch_size: 128
+    learning_rate: 0.001
+
+  bilstm:
+    # Architecture dimensions TBD after dataset inspection
+    epochs: 20
+    batch_size: 128
+    learning_rate: 0.001
+
+  hybrid_cnn_bilstm:
+    # Proposed architecture parameters TBD after dataset inspection
+    epochs: 30
+    batch_size: 128
+    learning_rate: 0.0005
+
+explainability:
+  shap:
+    background_samples: 100
+    test_samples: 50
