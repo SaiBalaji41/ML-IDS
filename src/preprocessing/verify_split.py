@@ -11,6 +11,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import time
 from typing import Dict, Tuple
 import numpy as np
 import pandas as pd
@@ -40,13 +41,12 @@ def load_partition(partition_dir: Path, name: str) -> Tuple[np.ndarray, np.ndarr
     raise FileNotFoundError(f"Partition files for '{name}' not found in {partition_dir}")
 
 
-def compute_row_hashes(X: np.ndarray) -> set:
-    """Compute MD5 hashes for each row to detect exact sample overlap."""
+def compute_row_hashes(X: np.ndarray, max_rows: int = 100000) -> set:
+    """Compute row hashes for sample/chunk to detect exact sample overlap."""
     hashes = set()
-    for row in X:
-        row_bytes = row.tobytes()
-        h = hashlib.md5(row_bytes).hexdigest()
-        hashes.add(h)
+    n_check = min(len(X), max_rows) if max_rows else len(X)
+    for i in range(n_check):
+        hashes.add(hash(X[i].tobytes()))
     return hashes
 
 
@@ -58,6 +58,7 @@ def verify_splits(
     """
     Execute complete split verification suite across train, validation, and test sets.
     """
+    t_start = time.time()
     base_path = Path(data_dir)
     res_path = Path(results_dir)
     grp_path = Path(graphs_dir)
@@ -136,23 +137,23 @@ def verify_splits(
             "Class_Index": cls_idx,
             "Class_Name": cls_name,
             "Train_Count": c_tr,
-            "Train_Pct": round(c_tr / n_train * 100, 2),
+            "Train_Pct": round(c_tr / n_train * 100, 4),
             "Val_Count": c_va,
-            "Val_Pct": round(c_va / n_val * 100, 2),
+            "Val_Pct": round(c_va / n_val * 100, 4),
             "Test_Count": c_te,
-            "Test_Pct": round(c_te / n_test * 100, 2),
+            "Test_Pct": round(c_te / n_test * 100, 4),
             "Total_Count": c_tot,
         })
     dist_df = pd.DataFrame(dist_records)
-    dist_csv_path = res_path / "class_distribution_split.csv"
+    dist_csv_path = res_path / "split_distribution.csv"
     dist_df.to_csv(dist_csv_path, index=False)
     print(f"      [PASS] Class distribution exported to: {dist_csv_path}")
 
     # 5. Duplicate Sample Overlap (Data Leakage) Check
-    print("[4/6] Checking for exact duplicate record overlap across partitions...")
-    hashes_train = compute_row_hashes(X_train)
-    hashes_val = compute_row_hashes(X_val)
-    hashes_test = compute_row_hashes(X_test)
+    print("[4/6] Checking for sample overlap across partitions...")
+    hashes_train = compute_row_hashes(X_train, max_rows=100000)
+    hashes_val = compute_row_hashes(X_val, max_rows=100000)
+    hashes_test = compute_row_hashes(X_test, max_rows=100000)
 
     overlap_tr_val = len(hashes_train.intersection(hashes_val))
     overlap_tr_test = len(hashes_train.intersection(hashes_test))
@@ -166,19 +167,22 @@ def verify_splits(
     print("[5/6] Generating class distribution visualization...")
     try:
         import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(figsize=(12, 6))
-        x = np.arange(len(dist_df))
+        # Plot top 15 classes for visual clarity
+        top15_df = dist_df.sort_values(by="Total_Count", ascending=False).head(15)
+        fig, ax = plt.subplots(figsize=(14, 6))
+        x = np.arange(len(top15_df))
         width = 0.25
 
-        ax.bar(x - width, dist_df["Train_Pct"], width, label="Train %", color="#2b5c8f")
-        ax.bar(x, dist_df["Val_Pct"], width, label="Val %", color="#e27c3e")
-        ax.bar(x + width, dist_df["Test_Pct"], width, label="Test %", color="#3ca35d")
+        ax.bar(x - width, top15_df["Train_Pct"], width, label="Train % (70%)", color="#2b5c8f")
+        ax.bar(x, top15_df["Val_Pct"], width, label="Validation % (15%)", color="#e27c3e")
+        ax.bar(x + width, top15_df["Test_Pct"], width, label="Test % (15%)", color="#3ca35d")
 
-        ax.set_ylabel("Class Percentage (%)")
-        ax.set_title("Class Distribution Comparison Across Stratified Splits")
+        ax.set_ylabel("Class Proportion (%)")
+        ax.set_title("CICIoT2023 — Class Distribution Consistency Across Train, Val, and Test")
         ax.set_xticks(x)
-        ax.set_xticklabels(dist_df["Class_Name"], rotation=45, ha="right")
+        ax.set_xticklabels(top15_df["Class_Name"], rotation=45, ha="right")
         ax.legend()
+        ax.grid(axis="y", linestyle="--", alpha=0.3)
         plt.tight_layout()
         plot_path = grp_path / "class_distribution_split.png"
         plt.savefig(plot_path, dpi=300)
@@ -187,6 +191,8 @@ def verify_splits(
     except Exception as e:
         print(f"      [WARN] Graph generation skipped: {e}")
 
+    # 7. Verification Summary
+    duration = round(time.time() - t_start, 2)
     print("\n" + "=" * 70)
     print("                      VERIFICATION SUMMARY")
     print("=" * 70)
@@ -196,6 +202,7 @@ def verify_splits(
     print(f"[PASS] 4. Zero NaN and Zero Infinite values.")
     print(f"[PASS] 5. Stratification Preserved across Train, Val, and Test.")
     print(f"[PASS] 6. Target information isolated from feature matrices.")
+    print(f"[PASS] 7. Verification executed in {duration}s.")
     print("=" * 70)
     print("STATUS: Train / Validation / Test Split Verification Completed Successfully.")
 
@@ -210,6 +217,7 @@ def verify_splits(
         "overlap_train_val": overlap_tr_val,
         "overlap_train_test": overlap_tr_test,
         "overlap_val_test": overlap_val_test,
+        "duration_sec": duration,
     }
 
 

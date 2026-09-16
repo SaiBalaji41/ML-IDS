@@ -3,11 +3,13 @@ Unit tests for Train/Validation/Test split verification logic.
 Tests dimension consistency, zero-leakage assertions, and hash overlap detection.
 """
 
+from pathlib import Path
 import pytest
 
 try:
     import numpy as np
-    from src.preprocessing.verify_split import compute_row_hashes
+    _ = np.random.randn(2, 2)
+    from src.preprocessing.verify_split import compute_row_hashes, load_partition
     NUMPY_AVAILABLE = True
 except (ImportError, Exception):
     NUMPY_AVAILABLE = False
@@ -44,3 +46,16 @@ def test_dimension_and_nan_assertions():
     assert not np.isnan(X_val).any()
     assert not np.isnan(X_test).any()
     assert not np.isinf(X_train).any()
+
+
+def test_processed_split_files_exist():
+    """Verify that processed split files and label mappings exist on disk."""
+    train_file = Path("data/processed/train/train.npz")
+    val_file = Path("data/processed/validation/val.npz")
+    test_file = Path("data/processed/test/test.npz")
+    mapping_file = Path("data/processed/label_mapping.json")
+
+    assert train_file.exists(), "train.npz missing"
+    assert val_file.exists(), "val.npz missing"
+    assert test_file.exists(), "test.npz missing"
+    assert mapping_file.exists(), "label_mapping.json missing"
