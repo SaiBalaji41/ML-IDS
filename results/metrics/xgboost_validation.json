@@ -1,0 +1,14 @@
+{
+    "accuracy": 0.9925,
+    "macro_precision": 0.7751,
+    "macro_recall": 0.8689,
+    "macro_f1": 0.7975,
+    "weighted_precision": 0.9939,
+    "weighted_recall": 0.9925,
+    "weighted_f1": 0.9931,
+    "total_samples": 1176851,
+    "model": "XGBoost",
+    "split": "validation",
+    "inference_time_sec": 12.4159,
+    "samples_evaluated": 1176851
+}
