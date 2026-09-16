@@ -10,12 +10,13 @@ import pandas as pd
 
 def clean_dataset(
     df: pd.DataFrame,
-    drop_duplicates: bool = True,
-    drop_constant_features: bool = True,
+    drop_duplicates: bool = False,
+    drop_constant_features: bool = False,
     impute_missing_strategy: str = "median",
 ) -> Tuple[pd.DataFrame, Dict]:
     """
     Clean the input DataFrame by handling infinities, nulls, duplicates, and constants.
+    Preserves all 46 legitimate network/security features by default.
     
     Args:
         df: Input raw DataFrame.
@@ -72,7 +73,7 @@ def clean_dataset(
         if dup_count > 0:
             cleaned_df = cleaned_df.drop_duplicates().reset_index(drop=True)
 
-    # 5. Drop Constant Features (Zero variance)
+    # 5. Drop Constant Features (Zero variance) if requested
     if drop_constant_features:
         constant_cols = [col for col in num_cols if col in cleaned_df.columns and cleaned_df[col].nunique() <= 1]
         if constant_cols:

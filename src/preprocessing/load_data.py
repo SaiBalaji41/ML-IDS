@@ -11,7 +11,7 @@ import pandas as pd
 
 def discover_raw_files(raw_dir: Union[str, Path] = "data/raw") -> List[Path]:
     """
-    Discover all readable raw dataset files in the raw directory.
+    Discover all readable raw dataset files in the raw directory (recursively).
     Supports CSV and Parquet formats.
     """
     raw_path = Path(raw_dir)
@@ -19,7 +19,7 @@ def discover_raw_files(raw_dir: Union[str, Path] = "data/raw") -> List[Path]:
         raise FileNotFoundError(f"Raw data directory not found: {raw_path}")
 
     files = [
-        f for f in raw_path.iterdir()
+        f for f in raw_path.rglob("*")
         if f.is_file() and f.suffix.lower() in [".csv", ".parquet"]
     ]
     return sorted(files)
@@ -58,7 +58,7 @@ def load_raw_dataset(
             if chunk_size:
                 chunks = []
                 for chunk in pd.read_csv(file_path, chunksize=chunk_size, low_memory=False):
-                    if sample_frac:
+                    if sample_frac and sample_frac < 1.0:
                         chunk = chunk.sample(frac=sample_frac, random_state=random_state)
                     chunks.append(chunk)
                 df = pd.concat(chunks, ignore_index=True)

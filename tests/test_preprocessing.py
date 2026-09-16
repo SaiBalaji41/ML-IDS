@@ -7,6 +7,7 @@ import pytest
 
 try:
     import numpy as np
+    _ = np.random.randn(2, 2)
     import pandas as pd
     from src.preprocessing.clean_data import clean_dataset
     from src.preprocessing.feature_processing import FeatureProcessor
@@ -40,7 +41,7 @@ def test_clean_dataset(mock_network_data):
     """Test infinity conversion, null imputation, and constant column removal."""
     if not NUMPY_AVAILABLE:
         pytest.skip("NumPy / Pandas native DLLs not accessible in current environment")
-    cleaned_df, stats = clean_dataset(mock_network_data)
+    cleaned_df, stats = clean_dataset(mock_network_data, drop_constant_features=True)
     assert stats["infinities_replaced"] == 1
     assert stats["missing_values_handled"] >= 1
     assert "constant_feature" in stats["constant_columns_dropped"]
