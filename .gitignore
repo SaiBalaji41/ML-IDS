@@ -80,6 +80,7 @@ data/processed/*
 # ==============================================================================
 models/*
 !models/.gitkeep
+!models/*.json
 *.pkl
 *.joblib
 *.pt

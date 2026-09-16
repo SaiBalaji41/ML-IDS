@@ -5,9 +5,19 @@ Wraps XGBoost's XGBClassifier with dynamic multiclass/binary objective handling 
 
 from pathlib import Path
 from typing import Dict, List, Optional, Union
-import joblib
 import numpy as np
-import xgboost as xgb
+
+try:
+    import xgboost as xgb
+    XGB_AVAILABLE = True
+except (ImportError, Exception):
+    XGB_AVAILABLE = False
+
+try:
+    import joblib
+    HAS_JOBLIB = True
+except ImportError:
+    HAS_JOBLIB = False
 
 
 class XGBoostBaselineModel:
@@ -46,10 +56,13 @@ class XGBoostBaselineModel:
         self.random_state = random_state
         self.n_jobs = n_jobs
         self.tree_method = tree_method
-        self.model: Optional[xgb.XGBClassifier] = None
+        self.model = None
 
-    def build_model(self, num_classes: int = 2) -> xgb.XGBClassifier:
+    def build_model(self, num_classes: int = 2):
         """Instantiate XGBClassifier with appropriate objective."""
+        if not XGB_AVAILABLE:
+            raise ImportError("XGBoost is required to build XGBoostBaselineModel.")
+
         if self.objective is None:
             if num_classes > 2:
                 obj = "multi:softprob"
@@ -87,6 +100,9 @@ class XGBoostBaselineModel:
         sample_weight: Optional[np.ndarray] = None,
     ) -> "XGBoostBaselineModel":
         """Fit XGBoost model on training data."""
+        if not XGB_AVAILABLE:
+            raise ImportError("XGBoost is required to train XGBoostBaselineModel.")
+
         num_classes = len(np.unique(y_train))
         if self.model is None:
             self.build_model(num_classes=num_classes)
@@ -124,12 +140,10 @@ class XGBoostBaselineModel:
         if self.model is None:
             raise RuntimeError("Model must be trained before extracting feature importances.")
         
-        # Access booster feature importances
         booster = self.model.get_booster()
         score_dict = booster.get_score(importance_type=importance_type)
         
         if feature_names is not None:
-            # XGBoost uses f0, f1, etc. if feature names are not provided in DMatrix
             result = {}
             for i, name in enumerate(feature_names):
                 f_key = f"f{i}"
@@ -141,9 +155,13 @@ class XGBoostBaselineModel:
         """Serialize fitted model to disk."""
         out_path = Path(filepath)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        joblib.dump(self.model, out_path)
+        import pickle
+        with open(out_path, "wb") as f:
+            pickle.dump(self.model, f)
 
     def load(self, filepath: Union[str, Path] = "models/xgboost.pkl"):
         """Load serialized model from disk."""
-        self.model = joblib.load(filepath)
+        import pickle
+        with open(filepath, "rb") as f:
+            self.model = pickle.load(f)
         return self

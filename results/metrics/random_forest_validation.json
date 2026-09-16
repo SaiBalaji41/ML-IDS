@@ -1,0 +1,14 @@
+{
+    "accuracy": 0.9913,
+    "macro_precision": 0.7606,
+    "macro_recall": 0.8525,
+    "macro_f1": 0.7945,
+    "weighted_precision": 0.9928,
+    "weighted_recall": 0.9913,
+    "weighted_f1": 0.9918,
+    "total_samples": 1176851,
+    "model": "Random Forest",
+    "split": "validation",
+    "inference_time_sec": 14.7146,
+    "samples_evaluated": 1176851
+}
