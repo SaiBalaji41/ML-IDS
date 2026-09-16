@@ -1,0 +1,17 @@
+{
+    "accuracy": 0.6612,
+    "macro_precision": 0.4312,
+    "macro_recall": 0.4697,
+    "macro_f1": 0.403,
+    "weighted_precision": 0.6791,
+    "weighted_recall": 0.6612,
+    "weighted_f1": 0.6151,
+    "total_samples": 1176851,
+    "model": "1D-CNN",
+    "split": "test",
+    "training_time_sec": 682.75,
+    "inference_time_sec": 33.4847,
+    "samples_evaluated": 1176851,
+    "epochs_completed": 9,
+    "best_epoch": 4
+}

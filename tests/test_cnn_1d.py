@@ -1,97 +1,150 @@
 """
-Unit tests for 1D-CNN deep learning model architecture, tensor shapes, and interface.
+Unit and Integration Tests for 1D-CNN Deep Learning Model (Phase 8).
 """
 
+import json
+import os
 from pathlib import Path
+import numpy as np
 import pytest
 
-try:
-    import numpy as np
-    _ = np.random.randn(2, 2)
-    from src.models.cnn_1d import Conv1DModel, TF_AVAILABLE
-    DL_AVAILABLE = TF_AVAILABLE
-except (ImportError, Exception):
-    DL_AVAILABLE = False
-    np = None
+from src.models.cnn_1d import CNN1DModel, build_cnn_1d_model
 
 
-def test_cnn_1d_initialization():
-    """Test 1D-CNN hyperparameter initialization."""
-    if not DL_AVAILABLE:
-        pytest.skip("TensorFlow / NumPy C-extensions not accessible in current environment")
-
-    model_wrapper = Conv1DModel(
-        num_features=46,
-        num_classes=8,
-        filters=(64, 128),
-        kernel_size=3,
-        dense_units=128,
-        dropout_rate=0.3,
-        learning_rate=0.001,
-    )
-    assert model_wrapper.num_features == 46
-    assert model_wrapper.num_classes == 8
-    assert model_wrapper.filters == (64, 128)
-    assert model_wrapper.kernel_size == 3
-    assert model_wrapper.dense_units == 128
-    assert model_wrapper.dropout_rate == 0.3
-    assert model_wrapper.learning_rate == 0.001
-    assert model_wrapper.model is None
+@pytest.fixture(scope="module")
+def project_root() -> Path:
+    return Path(__file__).resolve().parent.parent
 
 
-def test_cnn_1d_architecture_build():
-    """Test model construction and layer shapes."""
-    if not DL_AVAILABLE:
-        pytest.skip("TensorFlow / NumPy C-extensions not accessible in current environment")
-
-    model_wrapper = Conv1DModel(num_features=46, num_classes=8)
-    keras_model = model_wrapper.build_model()
-
-    assert keras_model is not None
-    assert keras_model.input_shape == (None, 46, 1)
-    assert keras_model.output_shape == (None, 8)
-    assert keras_model.count_params() > 0
+@pytest.fixture(scope="module")
+def model_path(project_root) -> Path:
+    return project_root / "models" / "cnn_1d" / "best_model.keras"
 
 
-def test_cnn_1d_fit_predict(tmp_path):
-    """Test mock training, inference, and serialization."""
-    if not DL_AVAILABLE:
-        pytest.skip("TensorFlow / NumPy C-extensions not accessible in current environment")
+@pytest.fixture(scope="module")
+def metadata_path(project_root) -> Path:
+    return project_root / "models" / "cnn_1d" / "metadata.json"
 
-    np.random.seed(42)
-    X_train = np.random.randn(32, 46).astype(np.float32)
-    y_train = np.random.randint(0, 4, size=32)
-    X_val = np.random.randn(16, 46).astype(np.float32)
-    y_val = np.random.randint(0, 4, size=16)
 
-    model_wrapper = Conv1DModel(num_features=46, num_classes=4)
-    model_wrapper.build_model()
+@pytest.fixture(scope="module")
+def test_metrics_path(project_root) -> Path:
+    return project_root / "results" / "metrics" / "cnn_1d_test.json"
 
-    # Train for 1 epoch on mock data
-    history = model_wrapper.fit(
-        X_train=X_train,
-        y_train=y_train,
-        X_val=X_val,
-        y_val=y_val,
-        epochs=1,
-        batch_size=16,
-    )
-    assert "loss" in history.history
-    assert "val_loss" in history.history
 
-    # Predictions
-    preds = model_wrapper.predict(X_val)
-    probs = model_wrapper.predict_proba(X_val)
+@pytest.fixture(scope="module")
+def validation_metrics_path(project_root) -> Path:
+    return project_root / "results" / "metrics" / "cnn_1d_validation.json"
 
-    assert preds.shape == (16,)
-    assert probs.shape == (16, 4)
 
-    # Save and Load
-    save_file = tmp_path / "best_model.keras"
-    model_wrapper.save(save_file)
-    assert save_file.exists()
+@pytest.fixture(scope="module")
+def history_path(project_root) -> Path:
+    return project_root / "results" / "metrics" / "cnn_1d_history.csv"
 
-    loaded_wrapper = Conv1DModel(num_features=46, num_classes=4)
-    loaded_wrapper.load(save_file)
-    loaded_preds = loaded_wrapper.predict(X_val)
-    assert np.array_equal(preds, loaded_preds)
+
+@pytest.fixture(scope="module")
+def report_path(project_root) -> Path:
+    return project_root / "results" / "metrics" / "cnn_1d_classification_report.csv"
+
+
+@pytest.fixture(scope="module")
+def cm_plot_path(project_root) -> Path:
+    return project_root / "results" / "confusion_matrices" / "cnn_1d_confusion_matrix.png"
+
+
+@pytest.fixture(scope="module")
+def history_plot_path(project_root) -> Path:
+    return project_root / "results" / "graphs" / "cnn_1d_training_history.png"
+
+
+@pytest.fixture(scope="module")
+def misclass_path(project_root) -> Path:
+    return project_root / "results" / "metrics" / "cnn_1d_misclassifications.csv"
+
+
+def test_cnn_model_file_exists(model_path):
+    """Test that serialized Keras model exists and is non-empty."""
+    assert model_path.exists(), f"Model file not found at {model_path}"
+    assert os.path.getsize(model_path) > 0, "Model file is empty"
+
+
+def test_cnn_metadata_exists_and_valid(metadata_path):
+    """Test that model metadata JSON exists and contains required fields."""
+    assert metadata_path.exists(), f"Metadata file not found at {metadata_path}"
+    with open(metadata_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+
+    assert meta.get("model_type") == "1D-CNN" or meta.get("model_name") == "1D-CNN"
+    assert meta["number_of_features"] == 46
+    assert meta["number_of_classes"] == 34
+    assert meta["random_seed"] == 42
+    assert meta["optimizer"].lower() == "adam"
+    assert "test_metrics" in meta
+    assert meta["test_metrics"]["accuracy"] > 0.60
+
+
+def test_cnn_model_can_be_loaded(model_path):
+    """Test that Keras model can be successfully loaded via CNN1DModel wrapper."""
+    cnn = CNN1DModel()
+    cnn.load(model_path)
+    assert cnn.model is not None
+
+
+def test_cnn_architecture_shapes():
+    """Test freshly built CNN architecture input and output tensor dimensions."""
+    model = build_cnn_1d_model(input_shape=(46, 1), num_classes=34)
+    assert model.input_shape == (None, 46, 1), f"Expected (None, 46, 1), got {model.input_shape}"
+    assert model.output_shape == (None, 34), f"Expected (None, 34), got {model.output_shape}"
+
+
+def test_cnn_predictions_shape_and_validity(model_path):
+    """Test that model predictions have correct shape and valid class bounds."""
+    cnn = CNN1DModel()
+    cnn.load(model_path)
+
+    # 20 synthetic samples with 46 features reshaped to (20, 46, 1) or 2D (20, 46)
+    dummy_x = np.random.randn(20, 46).astype(np.float32)
+    preds = cnn.predict(dummy_x)
+
+    assert preds.shape == (20,), f"Expected shape (20,), got {preds.shape}"
+    assert np.all(preds >= 0) and np.all(preds < 34), "Predicted labels out of [0, 33] bound"
+
+
+def test_cnn_predict_proba_validity(model_path):
+    """Test that predict_proba outputs valid probability distributions summing to 1.0."""
+    cnn = CNN1DModel()
+    cnn.load(model_path)
+
+    dummy_x = np.random.randn(10, 46, 1).astype(np.float32)
+    probs = cnn.predict_proba(dummy_x)
+
+    assert probs.shape == (10, 34), f"Expected shape (10, 34), got {probs.shape}"
+    np.testing.assert_allclose(np.sum(probs, axis=1), 1.0, atol=1e-3, err_msg="Probabilities must sum to 1.0")
+
+
+def test_cnn_metrics_artifacts_exist(
+    test_metrics_path,
+    validation_metrics_path,
+    history_path,
+    report_path,
+    misclass_path
+):
+    """Test that metric JSON and CSV files exist and contain valid results."""
+    assert test_metrics_path.exists(), "Test metrics JSON missing"
+    assert validation_metrics_path.exists(), "Validation metrics JSON missing"
+    assert history_path.exists(), "History CSV missing"
+    assert report_path.exists(), "Per-class report CSV missing"
+    assert misclass_path.exists(), "Misclassifications CSV missing"
+
+    with open(test_metrics_path, "r", encoding="utf-8") as f:
+        t_meta = json.load(f)
+    assert "accuracy" in t_meta
+    assert "macro_f1" in t_meta
+    assert "weighted_f1" in t_meta
+    assert t_meta["accuracy"] > 0.60
+
+
+
+def test_cnn_visual_artifacts_exist(cm_plot_path, history_plot_path):
+    """Test that confusion matrix and history plot images exist."""
+    assert cm_plot_path.exists(), "Confusion matrix plot missing"
+    assert history_plot_path.exists(), "History plot missing"
