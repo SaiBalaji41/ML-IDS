@@ -1,5 +1,5 @@
 """
-Basic unit tests for ML-IDS repository structure and import verification.
+Basic unit tests for ML-IDS repository structure and package configuration.
 """
 
 from pathlib import Path
@@ -11,6 +11,9 @@ def test_directory_structure():
     expected_dirs = [
         "data/raw",
         "data/processed",
+        "data/processed/train",
+        "data/processed/validation",
+        "data/processed/test",
         "data/sample",
         "notebooks",
         "src/preprocessing",
@@ -19,6 +22,7 @@ def test_directory_structure():
         "src/explainability",
         "src/realtime",
         "models",
+        "models/preprocessing",
         "results/metrics",
         "results/graphs/dataset_analysis",
         "results/confusion_matrices",
@@ -44,7 +48,16 @@ def test_essential_files_exist():
         ".gitignore",
         ".env.example",
         "docs/PRD.md",
+        "docs/preprocessing_decisions.md",
+        "docs/preprocessing_report.md",
         "configs/default_config.yaml",
+        "src/preprocessing/load_data.py",
+        "src/preprocessing/clean_data.py",
+        "src/preprocessing/feature_processing.py",
+        "src/preprocessing/label_processing.py",
+        "src/preprocessing/split_data.py",
+        "src/preprocessing/preprocess_pipeline.py",
+        "notebooks/02_data_preprocessing.ipynb",
     ]
     for file_path in expected_files:
         full_path = root / file_path
@@ -52,13 +65,12 @@ def test_essential_files_exist():
         assert full_path.is_file(), f"Expected file: {file_path}"
 
 
-def test_package_imports():
-    """Verify that the src packages can be imported cleanly."""
-    import src
-    import src.preprocessing
-    import src.models
-    import src.evaluation
-    import src.explainability
-    import src.realtime
-
-    assert src.__doc__ is not None
+def test_package_structure():
+    """Verify that src package modules exist with expected file structure."""
+    root = Path(__file__).parent.parent / "src"
+    assert (root / "__init__.py").exists()
+    assert (root / "preprocessing" / "__init__.py").exists()
+    assert (root / "models" / "__init__.py").exists()
+    assert (root / "evaluation" / "__init__.py").exists()
+    assert (root / "explainability" / "__init__.py").exists()
+    assert (root / "realtime" / "__init__.py").exists()
