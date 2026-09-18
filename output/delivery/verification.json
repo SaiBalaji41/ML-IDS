@@ -1,0 +1,822 @@
+{
+  "stats": {
+    "dataset": "CICIoT2023",
+    "feature_count": 46,
+    "class_count": 34,
+    "test_samples": 1176851,
+    "train_samples": 5491971,
+    "active_model": "CNN-BiLSTM",
+    "model_ready": true,
+    "accuracy": 0.8667885739146247,
+    "macro_f1": 0.5833853680631044,
+    "mean_latency_ms": null,
+    "representation": "46 ordered flow features",
+    "source": "held_out_replay",
+    "training": {
+      "state": "complete",
+      "model_name": "CNN-BiLSTM",
+      "representation": "flow_features",
+      "input_features": [
+        "flow_duration",
+        "Header_Length",
+        "Protocol Type",
+        "Duration",
+        "Rate",
+        "Srate",
+        "Drate",
+        "fin_flag_number",
+        "syn_flag_number",
+        "rst_flag_number",
+        "psh_flag_number",
+        "ack_flag_number",
+        "ece_flag_number",
+        "cwr_flag_number",
+        "ack_count",
+        "syn_count",
+        "fin_count",
+        "urg_count",
+        "rst_count",
+        "HTTP",
+        "HTTPS",
+        "DNS",
+        "Telnet",
+        "SMTP",
+        "SSH",
+        "IRC",
+        "TCP",
+        "UDP",
+        "DHCP",
+        "ARP",
+        "ICMP",
+        "IPv",
+        "LLC",
+        "Tot sum",
+        "Min",
+        "Max",
+        "AVG",
+        "Std",
+        "Tot size",
+        "IAT",
+        "Number",
+        "Magnitue",
+        "Radius",
+        "Covariance",
+        "Variance",
+        "Weight"
+      ],
+      "input_transform": "signed_log1p_standardized",
+      "label_mapping": {
+        "Backdoor_Malware": 0,
+        "BenignTraffic": 1,
+        "BrowserHijacking": 2,
+        "CommandInjection": 3,
+        "DDoS-ACK_Fragmentation": 4,
+        "DDoS-HTTP_Flood": 5,
+        "DDoS-ICMP_Flood": 6,
+        "DDoS-ICMP_Fragmentation": 7,
+        "DDoS-PSHACK_Flood": 8,
+        "DDoS-RSTFINFlood": 9,
+        "DDoS-SYN_Flood": 10,
+        "DDoS-SlowLoris": 11,
+        "DDoS-SynonymousIP_Flood": 12,
+        "DDoS-TCP_Flood": 13,
+        "DDoS-UDP_Flood": 14,
+        "DDoS-UDP_Fragmentation": 15,
+        "DNS_Spoofing": 16,
+        "DictionaryBruteForce": 17,
+        "DoS-HTTP_Flood": 18,
+        "DoS-SYN_Flood": 19,
+        "DoS-TCP_Flood": 20,
+        "DoS-UDP_Flood": 21,
+        "MITM-ArpSpoofing": 22,
+        "Mirai-greeth_flood": 23,
+        "Mirai-greip_flood": 24,
+        "Mirai-udpplain": 25,
+        "Recon-HostDiscovery": 26,
+        "Recon-OSScan": 27,
+        "Recon-PingSweep": 28,
+        "Recon-PortScan": 29,
+        "SqlInjection": 30,
+        "Uploading_Attack": 31,
+        "VulnerabilityScan": 32,
+        "XSS": 33
+      },
+      "seed": 42,
+      "training_samples": 200000,
+      "available_training_samples": 5491971,
+      "validation_samples": 40000,
+      "available_validation_samples": 1176851,
+      "test_samples": 1176851,
+      "epochs_completed": 25,
+      "best_epoch": 23,
+      "training_seconds": 640.1522829532623,
+      "parameter_count": 57010,
+      "checkpoint_sha256": "d166160bc093986f75e68e105d9cd861550ddb1d400bc93defc09bc2af5686e7",
+      "tensorflow_version": "2.21.0",
+      "metrics_path": "output/delivery/evaluation.json",
+      "note": "Trained on CICIoT2023 tabular flow features, not raw packet payload bytes. Historical partitions supplied with project; source-level split independence has not been audited.",
+      "accuracy": 0.8667885739146247,
+      "macro_f1": 0.5833853680631044
+    },
+    "trained_packet_model": false,
+    "errors": {}
+  },
+  "examples": [
+    {
+      "ground_truth": "BenignTraffic",
+      "sample_id": 3173,
+      "result": {
+        "predicted_label": "BenignTraffic",
+        "predicted_class_id": 1,
+        "is_attack": false,
+        "confidence": 77.84,
+        "severity": "BENIGN",
+        "model": "cnn_bilstm",
+        "latency_ms": 232.365,
+        "top_classes": [
+          {
+            "label": "BenignTraffic",
+            "prob": 77.84
+          },
+          {
+            "label": "MITM-ArpSpoofing",
+            "prob": 17.65
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 3.94
+          }
+        ],
+        "source": "submitted_flow"
+      }
+    },
+    {
+      "ground_truth": "DDoS-ICMP_Flood",
+      "sample_id": 753,
+      "result": {
+        "predicted_label": "DDoS-ICMP_Flood",
+        "predicted_class_id": 6,
+        "is_attack": true,
+        "confidence": 100.0,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 43.551,
+        "top_classes": [
+          {
+            "label": "DDoS-ICMP_Flood",
+            "prob": 100.0
+          },
+          {
+            "label": "DDoS-TCP_Flood",
+            "prob": 0.0
+          },
+          {
+            "label": "DoS-TCP_Flood",
+            "prob": 0.0
+          }
+        ],
+        "source": "submitted_flow"
+      }
+    },
+    {
+      "ground_truth": "Mirai-greeth_flood",
+      "sample_id": 1,
+      "result": {
+        "predicted_label": "Mirai-greeth_flood",
+        "predicted_class_id": 23,
+        "is_attack": true,
+        "confidence": 98.8,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 43.029,
+        "top_classes": [
+          {
+            "label": "Mirai-greeth_flood",
+            "prob": 98.8
+          },
+          {
+            "label": "Mirai-greip_flood",
+            "prob": 1.2
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 0.0
+          }
+        ],
+        "source": "submitted_flow"
+      }
+    },
+    {
+      "ground_truth": "Recon-PortScan",
+      "sample_id": 47544,
+      "result": {
+        "predicted_label": "Recon-OSScan",
+        "predicted_class_id": 27,
+        "is_attack": true,
+        "confidence": 46.38,
+        "severity": "REVIEW",
+        "model": "cnn_bilstm",
+        "latency_ms": 43.538,
+        "top_classes": [
+          {
+            "label": "Recon-OSScan",
+            "prob": 46.38
+          },
+          {
+            "label": "BenignTraffic",
+            "prob": 22.46
+          },
+          {
+            "label": "Recon-PortScan",
+            "prob": 21.39
+          }
+        ],
+        "source": "submitted_flow"
+      }
+    }
+  ],
+  "replay": {
+    "source": "held_out_replay",
+    "events": [
+      {
+        "predicted_label": "DDoS-ICMP_Flood",
+        "predicted_class_id": 6,
+        "is_attack": true,
+        "confidence": 100.0,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-ICMP_Flood",
+            "prob": 100.0
+          },
+          {
+            "label": "DDoS-TCP_Flood",
+            "prob": 0.0
+          },
+          {
+            "label": "DoS-TCP_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 830960,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-ICMP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-ICMP_Flood",
+        "predicted_class_id": 6,
+        "is_attack": true,
+        "confidence": 100.0,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-ICMP_Flood",
+            "prob": 100.0
+          },
+          {
+            "label": "DDoS-TCP_Flood",
+            "prob": 0.0
+          },
+          {
+            "label": "DoS-TCP_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 818813,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-ICMP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DoS-UDP_Flood",
+        "predicted_class_id": 21,
+        "is_attack": true,
+        "confidence": 63.91,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DoS-UDP_Flood",
+            "prob": 63.91
+          },
+          {
+            "label": "DDoS-UDP_Flood",
+            "prob": 36.09
+          },
+          {
+            "label": "DDoS-ICMP_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 235369,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-UDP_Flood",
+        "is_correct": false,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "Recon-PortScan",
+        "predicted_class_id": 29,
+        "is_attack": true,
+        "confidence": 55.39,
+        "severity": "REVIEW",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "Recon-PortScan",
+            "prob": 55.39
+          },
+          {
+            "label": "Recon-OSScan",
+            "prob": 29.98
+          },
+          {
+            "label": "Recon-HostDiscovery",
+            "prob": 14.14
+          }
+        ],
+        "event_id": 841661,
+        "timestamp": "09:02:57",
+        "true_label": "Recon-OSScan",
+        "is_correct": false,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-SynonymousIP_Flood",
+        "predicted_class_id": 12,
+        "is_attack": true,
+        "confidence": 100.0,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-SynonymousIP_Flood",
+            "prob": 100.0
+          },
+          {
+            "label": "DoS-SYN_Flood",
+            "prob": 0.0
+          },
+          {
+            "label": "DDoS-SYN_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 43778,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-SynonymousIP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-UDP_Flood",
+        "predicted_class_id": 14,
+        "is_attack": true,
+        "confidence": 82.38,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-UDP_Flood",
+            "prob": 82.38
+          },
+          {
+            "label": "DoS-UDP_Flood",
+            "prob": 17.62
+          },
+          {
+            "label": "DoS-SYN_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 544335,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-UDP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-UDP_Flood",
+        "predicted_class_id": 14,
+        "is_attack": true,
+        "confidence": 88.47,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-UDP_Flood",
+            "prob": 88.47
+          },
+          {
+            "label": "DoS-UDP_Flood",
+            "prob": 11.53
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 446333,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-UDP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "Mirai-greeth_flood",
+        "predicted_class_id": 23,
+        "is_attack": true,
+        "confidence": 97.85,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "Mirai-greeth_flood",
+            "prob": 97.85
+          },
+          {
+            "label": "Mirai-greip_flood",
+            "prob": 2.15
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 351581,
+        "timestamp": "09:02:57",
+        "true_label": "Mirai-greeth_flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-UDP_Flood",
+        "predicted_class_id": 14,
+        "is_attack": true,
+        "confidence": 90.07,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-UDP_Flood",
+            "prob": 90.07
+          },
+          {
+            "label": "DoS-UDP_Flood",
+            "prob": 9.93
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 649429,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-UDP_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      },
+      {
+        "predicted_label": "DDoS-PSHACK_Flood",
+        "predicted_class_id": 8,
+        "is_attack": true,
+        "confidence": 100.0,
+        "severity": "ALERT",
+        "model": "cnn_bilstm",
+        "latency_ms": 4.604,
+        "top_classes": [
+          {
+            "label": "DDoS-PSHACK_Flood",
+            "prob": 100.0
+          },
+          {
+            "label": "DoS-TCP_Flood",
+            "prob": 0.0
+          },
+          {
+            "label": "DoS-SYN_Flood",
+            "prob": 0.0
+          }
+        ],
+        "event_id": 248356,
+        "timestamp": "09:02:57",
+        "true_label": "DDoS-PSHACK_Flood",
+        "is_correct": true,
+        "source": "held_out_replay"
+      }
+    ]
+  },
+  "xgboost": {
+    "predicted_label": "BenignTraffic",
+    "predicted_class_id": 1,
+    "is_attack": false,
+    "confidence": 94.25,
+    "severity": "BENIGN",
+    "model": "xgboost",
+    "latency_ms": 22.822,
+    "top_classes": [
+      {
+        "label": "BenignTraffic",
+        "prob": 94.25
+      },
+      {
+        "label": "DNS_Spoofing",
+        "prob": 1.58
+      },
+      {
+        "label": "Recon-OSScan",
+        "prob": 1.18
+      }
+    ],
+    "source": "submitted_flow"
+  },
+  "csv": {
+    "source": "uploaded_csv",
+    "rows": 1,
+    "attacks": 0,
+    "events": [
+      {
+        "row": 2,
+        "predicted_label": "BenignTraffic",
+        "predicted_class_id": 1,
+        "is_attack": false,
+        "confidence": 77.84,
+        "severity": "BENIGN",
+        "model": "cnn_bilstm",
+        "latency_ms": 43.49,
+        "top_classes": [
+          {
+            "label": "BenignTraffic",
+            "prob": 77.84
+          },
+          {
+            "label": "MITM-ArpSpoofing",
+            "prob": 17.65
+          },
+          {
+            "label": "DNS_Spoofing",
+            "prob": 3.94
+          }
+        ]
+      }
+    ]
+  },
+  "explanation": {
+    "model": "cnn_bilstm",
+    "label": "BenignTraffic",
+    "probability": 0.7783513069152832,
+    "base_value": 5.221303355726241e-08,
+    "method": "SHAP permutation (one permutation; approximate, 16 training background rows)",
+    "additivity_residual": -7.391611100970863e-09,
+    "features": [
+      {
+        "feature": "rst_count",
+        "contribution": 0.27838350091565967,
+        "value": 4327.499969680025
+      },
+      {
+        "feature": "urg_count",
+        "contribution": 0.25434475120057837,
+        "value": 133.00000286290012
+      },
+      {
+        "feature": "Header_Length",
+        "contribution": -0.11309189149505983,
+        "value": 4673502.922974663
+      },
+      {
+        "feature": "IAT",
+        "contribution": 0.10743968596075248,
+        "value": -0.0009114444255828857
+      },
+      {
+        "feature": "ack_flag_number",
+        "contribution": 0.08811800400712146,
+        "value": 0.9999999878765713
+      },
+      {
+        "feature": "syn_count",
+        "contribution": 0.0651714992638972,
+        "value": 2.000000074463375
+      },
+      {
+        "feature": "Duration",
+        "contribution": 0.05852290350776457,
+        "value": 198.40000550451447
+      },
+      {
+        "feature": "Variance",
+        "contribution": -0.05244493057046068,
+        "value": 0.8999999811812207
+      },
+      {
+        "feature": "syn_flag_number",
+        "contribution": -0.0448415621402381,
+        "value": -1.0114142329209486e-08
+      },
+      {
+        "feature": "rst_flag_number",
+        "contribution": -0.03995823976583779,
+        "value": 6.300193561292744e-10
+      },
+      {
+        "feature": "Min",
+        "contribution": 0.036395653728732213,
+        "value": 210.80000059815
+      },
+      {
+        "feature": "ICMP",
+        "contribution": 0.03578669449780136,
+        "value": 1.3445463076244835e-09
+      },
+      {
+        "feature": "TCP",
+        "contribution": -0.03566527435032185,
+        "value": 0.9999999972194351
+      },
+      {
+        "feature": "ack_count",
+        "contribution": -0.03539402681053616,
+        "value": 2.3975814528176542e-09
+      },
+      {
+        "feature": "Tot sum",
+        "contribution": 0.03463104076096979,
+        "value": 4127.799918885293
+      },
+      {
+        "feature": "Tot size",
+        "contribution": 0.03289498465500529,
+        "value": 500.40000555173685
+      },
+      {
+        "feature": "AVG",
+        "contribution": 0.030418228668168013,
+        "value": 903.9437921461212
+      },
+      {
+        "feature": "Number",
+        "contribution": 0.026323259139644506,
+        "value": 5.500000038611001
+      },
+      {
+        "feature": "Std",
+        "contribution": 0.026221347787213745,
+        "value": 932.6273396801234
+      },
+      {
+        "feature": "fin_flag_number",
+        "contribution": -0.025844834402221295,
+        "value": 1.5690577170879294e-09
+      },
+      {
+        "feature": "flow_duration",
+        "contribution": 0.01501933804138389,
+        "value": 54.69955388899849
+      },
+      {
+        "feature": "Magnitue",
+        "contribution": 0.014444786956601712,
+        "value": 41.75090789220233
+      },
+      {
+        "feature": "HTTPS",
+        "contribution": 0.01384035893715918,
+        "value": 1.0000000132368134
+      },
+      {
+        "feature": "Weight",
+        "contribution": -0.012843524571160926,
+        "value": 38.50000140551562
+      },
+      {
+        "feature": "psh_flag_number",
+        "contribution": 0.01044714986346662,
+        "value": 5.98795193984536e-10
+      },
+      {
+        "feature": "Covariance",
+        "contribution": 0.00824289132893341,
+        "value": 984807.52770967
+      },
+      {
+        "feature": "Max",
+        "contribution": -0.007177196761769977,
+        "value": 2672.3999281926417
+      },
+      {
+        "feature": "Protocol Type",
+        "contribution": 0.005467219094498432,
+        "value": 5.999999992998118
+      },
+      {
+        "feature": "Radius",
+        "contribution": 0.003710438189955312,
+        "value": 1318.9342433377562
+      },
+      {
+        "feature": "UDP",
+        "contribution": 0.003051968102226965,
+        "value": 1.0389623217310628e-08
+      },
+      {
+        "feature": "fin_count",
+        "contribution": -0.002036498670349829,
+        "value": -7.93898419226835e-10
+      },
+      {
+        "feature": "Srate",
+        "contribution": -0.0012543521770567168,
+        "value": 79.13240441447124
+      },
+      {
+        "feature": "Rate",
+        "contribution": 2.788180972856935e-05,
+        "value": 79.13240441447124
+      },
+      {
+        "feature": "IPv",
+        "contribution": 0.0,
+        "value": 1.0000000000021037
+      },
+      {
+        "feature": "Drate",
+        "contribution": 0.0,
+        "value": 5.3442856863289857e-14
+      },
+      {
+        "feature": "LLC",
+        "contribution": 0.0,
+        "value": 1.0000000000021037
+      },
+      {
+        "feature": "DNS",
+        "contribution": 0.0,
+        "value": 2.8935842708455867e-12
+      },
+      {
+        "feature": "SMTP",
+        "contribution": 0.0,
+        "value": -4.300786999203473e-15
+      },
+      {
+        "feature": "ARP",
+        "contribution": 0.0,
+        "value": -2.3336311995216658e-12
+      },
+      {
+        "feature": "ece_flag_number",
+        "contribution": 0.0,
+        "value": -2.169503454923366e-14
+      },
+      {
+        "feature": "cwr_flag_number",
+        "contribution": 0.0,
+        "value": 4.732388005265471e-15
+      },
+      {
+        "feature": "DHCP",
+        "contribution": 0.0,
+        "value": -6.966478378867512e-14
+      },
+      {
+        "feature": "IRC",
+        "contribution": 0.0,
+        "value": 0.0
+      },
+      {
+        "feature": "SSH",
+        "contribution": 0.0,
+        "value": 1.1879848504665197e-13
+      },
+      {
+        "feature": "HTTP",
+        "contribution": 0.0,
+        "value": -1.1774734867686654e-09
+      },
+      {
+        "feature": "Telnet",
+        "contribution": 0.0,
+        "value": 0.0
+      }
+    ],
+    "note": "Attribution explains the model output, not proof of an attack."
+  },
+  "capture_observation_available": true,
+  "packet_byte_detection": "Needs labeled PCAP training data; raw bytes correctly rejected by the flow model.",
+  "checks": "API, checkpoint readiness, actual predictions, replay, CSV, local SHAP, schema errors, traversal protection, byte-model gating, capture interface discovery."
+}

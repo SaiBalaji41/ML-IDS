@@ -67,11 +67,14 @@ data/raw/*
 data/processed/*
 !data/processed/.gitkeep
 *.csv
+!docs/packet_manifest.example.csv
+!data/packet_manifest.csv
 *.pcap
 *.parquet
 *.h5
 *.hdf5
 *.zip
+!output/ML-IDS-PyTorch-Streamlit.zip
 *.tar.gz
 *.7z
 
@@ -95,3 +98,12 @@ models/*
 .coverage
 htmlcov/
 *.log
+
+# Local runtime and network capture data
+.venv-macos/
+.venv-pytorch/
+data/packet_processed/
+data/packet_captures/
+*.pcapng
+runtime/
+output/delivery/*.npy

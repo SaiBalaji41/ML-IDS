@@ -1,0 +1,31 @@
+{
+  "phase": "Phase 13 \u2014 SHAP Explainability / XAI",
+  "execution_timestamp": "2026-09-17T05:03:54Z",
+  "python_version": "3.12.10",
+  "shap_version": "0.52.0",
+  "tensorflow_version": "2.21.0",
+  "dataset": "CICIoT2023",
+  "source_split": "data/processed/test/test.npz",
+  "random_seed": 42,
+  "feature_count": 46,
+  "class_count": 34,
+  "models_explained": [
+    "Random Forest",
+    "XGBoost",
+    "1D-CNN",
+    "BiLSTM",
+    "CNN + BiLSTM"
+  ],
+  "explainers_used": {
+    "Random Forest": "shap.TreeExplainer",
+    "XGBoost": "shap.TreeExplainer",
+    "1D-CNN": "Neural Saliency / Gradient Attribution Proxy",
+    "BiLSTM": "Neural Saliency / Gradient Attribution Proxy",
+    "CNN + BiLSTM": "Neural Saliency / Gradient Attribution Proxy"
+  },
+  "sampling_strategy": {
+    "background_samples": 100,
+    "tree_evaluation_samples": 500,
+    "deep_learning_evaluation_samples": 100
+  }
+}

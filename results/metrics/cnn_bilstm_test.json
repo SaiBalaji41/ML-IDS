@@ -1,0 +1,12 @@
+{
+  "partition": "test",
+  "sample_count": 1176851,
+  "accuracy": 0.6247171477102879,
+  "macro_precision": 0.3846747569995422,
+  "macro_recall": 0.41897780817871605,
+  "macro_f1": 0.3464778208077478,
+  "weighted_precision": 0.6375399857162333,
+  "weighted_recall": 0.6247171477102879,
+  "weighted_f1": 0.5531502334016289,
+  "inference_time_seconds": 157.4222252368927
+}

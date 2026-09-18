@@ -9,11 +9,15 @@ import argparse
 import json
 import os
 from pathlib import Path
+import platform
 import sys
 import time
 from typing import Dict, Tuple
 
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+def _safe_get_machine_win32():
+    return os.environ.get("PROCESSOR_ARCHITECTURE", "AMD64")
+platform._get_machine_win32 = _safe_get_machine_win32
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -27,6 +31,9 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.utils.class_weight import compute_class_weight
+
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 
 # Ensure project root is in sys.path
@@ -226,12 +233,14 @@ def main():
 
     # 6. Training Execution
     print(f"\nStarting BiLSTM training (max {args.epochs} epochs, batch size {args.batch_size})...")
+    val_sub_n = min(50000, len(X_val))
+    X_val_train, y_val_train = X_val[:val_sub_n], y_val[:val_sub_n]
     t0_train = time.time()
     history = bilstm_wrapper.fit(
         X_train=X_train,
         y_train=y_train,
-        X_val=X_val,
-        y_val=y_val,
+        X_val=X_val_train,
+        y_val=y_val_train,
         epochs=args.epochs,
         batch_size=args.batch_size,
         callbacks_list=cb_list,

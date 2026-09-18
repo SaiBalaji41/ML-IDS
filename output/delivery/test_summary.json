@@ -1,0 +1,19 @@
+{
+  "full_project": {
+    "passed": 86,
+    "failed": 0,
+    "warnings": 3,
+    "seconds": 22.31
+  },
+  "freshly_extracted_inference_package": {
+    "passed": 21,
+    "failed": 0,
+    "warnings": 3,
+    "seconds": 10.07
+  },
+  "warnings": "SHAP matplotlib color API deprecation warnings only.",
+  "api_verification": "passed; see verification.json",
+  "browser_verification": "Blue light dashboard rendered in Safari. Run 10 flows produced ten real hybrid predictions with confidence and match/mismatch indicators. Training page rendered new metrics and classwise results.",
+  "kafka_broker": "not verified; Docker daemon unavailable",
+  "raw_payload_training": "not run; no labeled PCAP data in the supplied dataset directory"
+}

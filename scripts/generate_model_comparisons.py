@@ -54,12 +54,15 @@ def main():
 
     # 2. Build Final Model Comparison Table
     # Model, Accuracy, Precision Macro, Recall Macro, F1 Macro, Precision Weighted, Recall Weighted, F1 Weighted, Training Time, Inference Time, Parameter Count, Model Size
+    rf_bin = PROJECT_ROOT / "models" / "random_forest.pkl" if (PROJECT_ROOT / "models" / "random_forest.pkl").exists() else PROJECT_ROOT / "models" / "random_forest.joblib"
     model_metadata_map = {
-        "Random Forest": (PROJECT_ROOT / "models" / "random_forest_metadata.json", PROJECT_ROOT / "models" / "random_forest.joblib"),
+        "Random Forest": (PROJECT_ROOT / "models" / "random_forest_metadata.json", rf_bin),
         "XGBoost": (PROJECT_ROOT / "models" / "xgboost_metadata.json", PROJECT_ROOT / "models" / "xgboost.pkl"),
         "1D-CNN": (PROJECT_ROOT / "models" / "cnn_1d" / "metadata.json", PROJECT_ROOT / "models" / "cnn_1d" / "best_model.keras"),
         "BiLSTM": (PROJECT_ROOT / "models" / "bilstm" / "metadata.json", PROJECT_ROOT / "models" / "bilstm" / "best_model.keras"),
         "CNN + BiLSTM": (PROJECT_ROOT / "models" / "cnn_bilstm" / "metadata.json", PROJECT_ROOT / "models" / "cnn_bilstm" / "best_model.keras"),
+        "Hybrid CNN-BiLSTM": (PROJECT_ROOT / "models" / "cnn_bilstm" / "metadata.json", PROJECT_ROOT / "models" / "cnn_bilstm" / "best_model.keras"),
+        "CNN-BiLSTM": (PROJECT_ROOT / "models" / "cnn_bilstm" / "metadata.json", PROJECT_ROOT / "models" / "cnn_bilstm" / "best_model.keras"),
     }
 
     final_rows = []
@@ -273,8 +276,11 @@ def main():
         # Loss Plot
         plt.figure(figsize=(10, 6))
         for m_name, h_df in dl_hists.items():
-            plt.plot(h_df["epoch"], h_df["loss"], label=f"{m_name} (Train)", linestyle="--", alpha=0.8)
-            plt.plot(h_df["epoch"], h_df["val_loss"], label=f"{m_name} (Val)", lw=2)
+            epochs = h_df["epoch"] if "epoch" in h_df.columns else range(1, len(h_df) + 1)
+            if "loss" in h_df.columns:
+                plt.plot(epochs, h_df["loss"], label=f"{m_name} (Train)", linestyle="--", alpha=0.8)
+            if "val_loss" in h_df.columns:
+                plt.plot(epochs, h_df["val_loss"], label=f"{m_name} (Val)", lw=2)
         plt.title("Deep Learning Convergence: Training vs. Validation Loss", fontsize=13, fontweight="bold")
         plt.xlabel("Epoch", fontsize=11)
         plt.ylabel("Sparse Categorical Crossentropy Loss", fontsize=11)
@@ -287,8 +293,11 @@ def main():
         # Accuracy Plot
         plt.figure(figsize=(10, 6))
         for m_name, h_df in dl_hists.items():
-            plt.plot(h_df["epoch"], h_df["accuracy"], label=f"{m_name} (Train)", linestyle="--", alpha=0.8)
-            plt.plot(h_df["epoch"], h_df["val_accuracy"], label=f"{m_name} (Val)", lw=2)
+            epochs = h_df["epoch"] if "epoch" in h_df.columns else range(1, len(h_df) + 1)
+            if "accuracy" in h_df.columns:
+                plt.plot(epochs, h_df["accuracy"], label=f"{m_name} (Train)", linestyle="--", alpha=0.8)
+            if "val_accuracy" in h_df.columns:
+                plt.plot(epochs, h_df["val_accuracy"], label=f"{m_name} (Val)", lw=2)
         plt.title("Deep Learning Convergence: Training vs. Validation Accuracy", fontsize=13, fontweight="bold")
         plt.xlabel("Epoch", fontsize=11)
         plt.ylabel("Accuracy", fontsize=11)

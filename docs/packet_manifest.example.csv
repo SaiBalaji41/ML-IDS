@@ -1,0 +1,7 @@
+path,label,split,capture_id,dataset,source_url
+captures/benign_train.pcap,BenignTraffic,train,benign-session-1,CICIoT2023,
+captures/attack_train.pcap,DDoS-UDP_Flood,train,attack-session-1,CICIoT2023,
+captures/benign_val.pcap,BenignTraffic,validation,benign-session-2,CICIoT2023,
+captures/attack_val.pcap,DDoS-UDP_Flood,validation,attack-session-2,CICIoT2023,
+captures/benign_test.pcap,BenignTraffic,test,benign-session-3,CICIoT2023,
+captures/attack_test.pcap,DDoS-UDP_Flood,test,attack-session-3,CICIoT2023,

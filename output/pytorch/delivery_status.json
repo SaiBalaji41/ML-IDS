@@ -1,0 +1,41 @@
+{
+  "project": "ML-Powered Intrusion Detection System for Secure Network Monitoring",
+  "active_framework": "PyTorch",
+  "dashboard": "Streamlit",
+  "input": "1024 ordered raw transport payload bytes",
+  "software_status": "implemented_and_tested",
+  "real_ciciot2023_packet_training_status": "blocked_missing_raw_labeled_pcaps",
+  "trained_packet_model_included": false,
+  "downloaded_dataset": {
+    "folder": "/Users/harsha/Downloads/CICIOT23",
+    "csv_files": 3,
+    "pcap_files": 0,
+    "features_per_csv_row": 46
+  },
+  "verification": {
+    "tests": 26,
+    "failures": 0,
+    "errors": 0,
+    "scope": "PyTorch training, inference, byte SHAP, source-preserving replay, actual Scapy offline capture queue and PCAP recording, nested validation and cluster bootstrap, plus interactive Streamlit controls. Tests use temporary synthetic fixtures, not research data. Missing-manifest CLI errors, non-overwriting manifest creation, and disabled preparation without verified capture paths are also tested.",
+    "ui_regression_tests_after_style_and_form_updates": 3,
+    "browser": "Safari: verified blue light overview, 16px rounded cards, screenshot-matching monitoring columns and live capture controls. Manifest creation and missing-data controls verified with Streamlit AppTest."
+  },
+  "dashboard_url": "http://127.0.0.1:8501",
+  "remaining_steps": [
+    "Obtain official CICIoT2023 raw PCAP edition and verify packet/capture labels.",
+    "Create capture-disjoint train/validation/test manifest with sufficient payloads per required class.",
+    "Prepare data, train the PyTorch model, then assess held-out detection and explanation results."
+  ],
+  "official_dataset_url": "https://www.unb.ca/cic/datasets/iotdataset-2023.html",
+  "data_download_note": "The official raw download requires registration. No registration or personal-data submission was performed.",
+  "legacy_note": "Earlier TensorFlow flow model and metrics are preserved separately and do not satisfy or represent the raw-byte project.",
+  "features_added": [
+    "Screenshot-style light detection feed with source IP, protocol, truth, prediction, confidence, triage severity and result status",
+    "Bounded live capture, queue, inference worker and optional local PCAP recording",
+    "Saved-PCAP batch analysis with unknown truth preserved",
+    "Nested capture-group validation and bootstrap confidence intervals"
+  ],
+  "live_capture_status": "implemented; real macOS test denied permission to open /dev/bpf0; no successful live-capture claim",
+  "nested_validation_status": "implemented and tested on synthetic fixtures; real CICIoT2023 experiment pending labeled PCAPs",
+  "manifest_status": "Empty starter manifest supplied at data/packet_manifest.csv; add verified labeled PCAP rows before preparation."
+}

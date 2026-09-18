@@ -54,6 +54,15 @@ class PureStandardScaler:
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
         return self.fit(X).transform(X)
 
+    def inverse_transform(self, X: np.ndarray) -> np.ndarray:
+        """Recover raw feature units using the saved training statistics."""
+        if self.mean_ is None or self.scale_ is None:
+            raise RuntimeError("Scaler must be fitted before inverse_transform().")
+        values = np.asarray(X, dtype=np.float64)
+        if values.ndim != 2 or values.shape[1] != self.n_features_in_:
+            raise ValueError("Feature count does not match the fitted scaler.")
+        return values * self.scale_ + self.mean_
+
 
 class FeatureProcessor:
     """

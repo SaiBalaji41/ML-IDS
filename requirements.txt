@@ -1,38 +1,13 @@
-# ==============================================================================
-# ML-IDS Core Python Dependencies
-# Versions will be pinned during verified environment builds.
-# ==============================================================================
-
-# Core Numerical & Data Handling
-numpy
-pandas
-scipy
-pyyaml
-
-# Classical Machine Learning & Baselines
-scikit-learn
-xgboost
-
-# Deep Learning Framework (TensorFlow / Keras)
-tensorflow
-
-# Model Explainability & Interpretability (XAI)
-shap
-
-# Visualization & Reporting
-matplotlib
-seaborn
-
-# Interactive Exploration & Development
-jupyter
-notebook
-ipykernel
-
-# Quality Assurance & Testing
-pytest
-
-# ==============================================================================
-# Future Real-Time Streaming Dependencies (Phases 17-20)
-# ==============================================================================
-# scapy
-# kafka-python
+# Active PyTorch / Streamlit packet IDS. Verified with Python 3.12.
+torch==2.14.0
+streamlit==1.64.0
+shap==0.52.0
+scapy==2.7.0
+numpy==2.5.3
+pandas==3.0.6
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+plotly==7.1.0
+pyyaml==6.0.3
+pytest==9.1.1

@@ -14,7 +14,10 @@ import sys
 import time
 from typing import Dict, Tuple
 
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+def _safe_get_machine_win32():
+    return os.environ.get("PROCESSOR_ARCHITECTURE", "AMD64")
+platform._get_machine_win32 = _safe_get_machine_win32
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -28,6 +31,9 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.utils.class_weight import compute_class_weight
+
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 
 # Ensure project root is in sys.path
@@ -86,10 +92,13 @@ def evaluate_partition(
     X: np.ndarray,
     y: np.ndarray,
     partition_name: str,
+    batch_size: int = 4096,
 ) -> Tuple[Dict[str, float], np.ndarray, float]:
     """Calculate standard classification metrics on given partition."""
+    print(f"\nRunning model inference on {partition_name} partition ({len(X):,} samples, batch_size={batch_size})...")
+    sys.stdout.flush()
     t0 = time.time()
-    y_pred = model.predict(X)
+    y_pred = model.predict(X, batch_size=batch_size)
     infer_time = time.time() - t0
 
     acc = accuracy_score(y, y_pred)
@@ -228,12 +237,14 @@ def main():
 
     # 6. Training Execution
     print(f"\nStarting Hybrid CNN-BiLSTM training (max {args.epochs} epochs, batch size {args.batch_size})...")
+    val_sub_n = min(50000, len(X_val))
+    X_val_train, y_val_train = X_val[:val_sub_n], y_val[:val_sub_n]
     t0_train = time.time()
     history = hybrid_wrapper.fit(
         X_train=X_train,
         y_train=y_train,
-        X_val=X_val,
-        y_val=y_val,
+        X_val=X_val_train,
+        y_val=y_val_train,
         epochs=args.epochs,
         batch_size=args.batch_size,
         callbacks_list=cb_list,
@@ -268,7 +279,7 @@ def main():
 
     # 9. Validation Evaluation
     val_metrics, y_val_pred, val_infer_time = evaluate_partition(
-        hybrid_wrapper, X_val, y_val, "validation"
+        hybrid_wrapper, X_val, y_val, "validation", batch_size=4096
     )
     val_json = metrics_dir / "cnn_bilstm_validation.json"
     with open(val_json, "w", encoding="utf-8") as f:
@@ -277,7 +288,7 @@ def main():
 
     # 10. Test Evaluation (Single Unbiased Pass)
     test_metrics, y_test_pred, test_infer_time = evaluate_partition(
-        hybrid_wrapper, X_test, y_test, "test"
+        hybrid_wrapper, X_test, y_test, "test", batch_size=4096
     )
     test_json = metrics_dir / "cnn_bilstm_test.json"
     with open(test_json, "w", encoding="utf-8") as f:

@@ -1,27 +1,37 @@
-"""
-Data Preprocessing & Transformation Module.
-Planned implementation for Phase 4:
-- Data cleaning and missing value imputation
-- Duplicate and infinite value handling
-- Numerical feature scaling (StandardScaler / MinMaxScaler)
-- Categorical and target label encoding
-- Stratified train/validation/test tensor splitting
-"""
+"""Training-only numeric imputation, scaling and schema validation for flow data."""
+import numpy as np
+import pandas as pd
+from .feature_processing import PureStandardScaler
 
 
 class DataPreprocessor:
-    """Preprocessor class for CICIoT2023 dataset."""
+    """Reusable flow preprocessor. Pass features without the label column.
 
-    def __init__(self, config=None):
-        self.config = config
-        self.scaler = None
-        self.label_encoder = None
-        # Implementation to be developed in Phase 4 after Phase 3 dataset inspection
+    Fit on the training partition only. Validation, test and inference use transform.
+    Median values and feature order are retained; unexpected columns are rejected.
+    """
+    def __init__(self,config=None):
+        self.config=config or {}
+        self.scaler=None
+        self.feature_names=None
+        self.medians=None
 
-    def fit_transform(self, data):
-        """Fit transformers on training data and return processed features."""
-        raise NotImplementedError("Scheduled for implementation in Phase 4.")
+    def _frame(self,data,fit=False):
+        frame=pd.DataFrame(data).copy()
+        if frame.empty:raise ValueError('Feature data must not be empty.')
+        if frame.columns.duplicated().any():raise ValueError('Duplicate feature names.')
+        if fit:self.feature_names=list(frame.columns)
+        if set(frame.columns)!=set(self.feature_names):raise ValueError('Feature schema differs from the training schema.')
+        frame=frame[self.feature_names].apply(pd.to_numeric,errors='raise')
+        return frame.replace([np.inf,-np.inf],np.nan)
 
-    def transform(self, data):
-        """Transform validation/testing data statelessly using fitted parameters."""
-        raise NotImplementedError("Scheduled for implementation in Phase 4.")
+    def fit_transform(self,data):
+        frame=self._frame(data,fit=True)
+        self.medians=frame.median().fillna(0)
+        self.scaler=PureStandardScaler()
+        return self.scaler.fit_transform(frame.fillna(self.medians).to_numpy())
+
+    def transform(self,data):
+        if self.scaler is None:raise RuntimeError('Fit on training features before transforming.')
+        frame=self._frame(data)
+        return self.scaler.transform(frame.fillna(self.medians).to_numpy())
