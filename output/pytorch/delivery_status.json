@@ -43,7 +43,10 @@
     "entrypoint": "cloud/app.py",
     "branch": "streamlit-cloud",
     "python": "3.12",
-    "status": "prepared_pending_account_sign_in",
-    "model_available": false
+    "status": "deployed_and_verified",
+    "model_available": false,
+    "url": "https://sentinel-ml-ids.streamlit.app",
+    "runtime_fix": "Changed Streamlit app Python version from 3.14 to 3.12 and rebuilt the environment.",
+    "verification": "Hosted overview and PCAP analysis page load. Packet inspector accepts 00 7f ff and reports 3 original bytes and 1021 padding bytes. Classification remains disabled without a trained checkpoint."
   }
 }
