@@ -453,7 +453,7 @@ def training_page():
             st.info('No trained packet model is deployed. Evaluation and byte SHAP become available after verified CICIoT2023 PCAP training.')
         render_saved_evaluation()
         st.caption('Dataset preparation, training and nested validation run in the local application. Deploy the verified model artifacts together after training.')
-        st.link_button('Training and setup instructions', 'https://github.com/HarshavardhanVemali/ML-IDS#obtain-the-required-data')
+        st.link_button('Training and setup instructions', 'https://github.com/SaiBalaji41/ML-IDS#obtain-the-required-data')
         return
     header('REPRODUCIBLE TRAINING', 'Training & evaluation',
            'Prepare labeled CICIoT2023 captures, train the PyTorch hybrid, and evaluate unseen capture groups.')

@@ -5,7 +5,7 @@
   "cloud/app.py": "4e168f01e4af4c6c17bc84dd5ac5618bf3b4ea8052b09def2437fbb3b3c8d767",
   "cloud/requirements.txt": "65196f7f0ed54851a88056f8be560f2c14978932653cdc34b6a52d1a255700a8",
   "data/packet_manifest.csv": "2fcea4a12da5d868e0e4646ebd5c9a236eb748e7081f8398b43a8f5102a91bbd",
-  "docs/CLOUD_DEPLOYMENT.md": "51c7d5cc9ae73962da2ba26866ab794ab2eabfff36891d1b3a74241a675ca34b",
+  "docs/CLOUD_DEPLOYMENT.md": "9fe1689429007c5f599eebd9aa2a62c9018dd344537d995fcb3dfa5c6a06a08a",
   "docs/packet_manifest.example.csv": "74c59d58d1fc9abccd14f7cd025b1f3dcb2d83045f00f1d3da92e195f7181dec",
   "output/ML-IDS-Run-Guide.docx": "c55a351305935a916db9aa37ff9cc77222f8d08bd035cf054445e44464490cf8",
   "output/pytorch/dataset_audit.json": "de65257c02072d4ec01ef697c3e9032074e10e97d4f2a0f373ee91fe674ed6b9",
@@ -34,7 +34,7 @@
   "scripts/train_packet_bytes.py": "522122cf088d23e627b67cfa3f79e9cb6414002d3805c3f2fe4dbacc07281db8",
   "start.bat": "575bbe588b51910248f33c983caddf72c344d1d4a29f2a846d490d20ee8c22dc",
   "start.sh": "4bd94124996bfc4003c09f3f3778dbda756c604aed16ebcfb0bf8ef1636d8fb2",
-  "streamlit_app/app.py": "addfe6c8d99773ea681eb605f2b8e814dc3ea2de28a766e75560fa85f9de6764",
+  "streamlit_app/app.py": "9245f025921c2640a7da8bc071446f236ac0a814f9ddb58d230065c44101f4c1",
   "streamlit_app/jobs.py": "f523e9fb9c371ffb6371419a404441c02b863a35b0d9d2bdfe08e1dbaaab76fd",
   "streamlit_app/monitoring.py": "cfb318cf80375b9210c595965e172e851a91538d44f9c377da898526ae04257a",
   "streamlit_app/styles.css": "51c586cc2459bd353ca76f3a97f063d9a80d775a88e28843b425c42d571c6b10"
