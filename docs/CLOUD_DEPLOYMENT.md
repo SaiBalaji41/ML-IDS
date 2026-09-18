@@ -4,11 +4,11 @@ This project keeps its Streamlit interface. Vercel is not the deployment target 
 
 ## Deployment settings
 
-Use Streamlit Community Cloud at https://share.streamlit.io and connect the existing private repository. Keep the repository private.
+Use Streamlit Community Cloud at https://share.streamlit.io and connect the existing public repository selected for this deployment.
 
 | Setting | Value |
 | --- | --- |
-| Repository | HarshavardhanVemali/ML-IDS |
+| Repository | SaiBalaji41/ML-IDS |
 | Branch | streamlit-cloud |
 | Main file | cloud/app.py |
 | Python version | 3.12 |
@@ -31,7 +31,7 @@ For subsequent code updates, commit and push master, merge master into streamlit
 
 ## Troubleshooting
 
-If the repository is not listed, the Streamlit account needs access to the private GitHub repository. That account authorization is a deployment prerequisite; no application secret or model is needed just to open the dashboard.
+If the repository is not listed, check that the Streamlit account is connected to GitHub and can select the repository. That account authorization is a deployment prerequisite; no application secret or model is needed just to open the dashboard.
 
 Select Python 3.12 in Advanced settings before deploying. If installation fails, inspect the dependency log and ensure Community Cloud selected `cloud/requirements.txt`.
 
