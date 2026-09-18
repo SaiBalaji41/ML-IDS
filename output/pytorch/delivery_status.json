@@ -13,10 +13,10 @@
     "features_per_csv_row": 46
   },
   "verification": {
-    "tests": 26,
+    "tests": 27,
     "failures": 0,
     "errors": 0,
-    "scope": "PyTorch training, inference, byte SHAP, source-preserving replay, actual Scapy offline capture queue and PCAP recording, nested validation and cluster bootstrap, plus interactive Streamlit controls. Tests use temporary synthetic fixtures, not research data. Missing-manifest CLI errors, non-overwriting manifest creation, and disabled preparation without verified capture paths are also tested.",
+    "scope": "PyTorch training, inference, byte SHAP, source-preserving replay, actual Scapy offline capture queue and PCAP recording, nested validation and cluster bootstrap, plus interactive Streamlit controls. Tests use temporary synthetic fixtures, not research data. Missing-manifest CLI errors, non-overwriting manifest creation, and disabled preparation without verified capture paths are also tested. Cloud entrypoint tests verify byte inspection and the absence of local capture/training controls.",
     "ui_regression_tests_after_style_and_form_updates": 3,
     "browser": "Safari: verified blue light overview, 16px rounded cards, screenshot-matching monitoring columns and live capture controls. Manifest creation and missing-data controls verified with Streamlit AppTest."
   },
@@ -37,5 +37,13 @@
   ],
   "live_capture_status": "implemented; real macOS test denied permission to open /dev/bpf0; no successful live-capture claim",
   "nested_validation_status": "implemented and tested on synthetic fixtures; real CICIoT2023 experiment pending labeled PCAPs",
-  "manifest_status": "Empty starter manifest supplied at data/packet_manifest.csv; add verified labeled PCAP rows before preparation."
+  "manifest_status": "Empty starter manifest supplied at data/packet_manifest.csv; add verified labeled PCAP rows before preparation.",
+  "cloud_deployment": {
+    "target": "Streamlit Community Cloud",
+    "entrypoint": "cloud/app.py",
+    "branch": "streamlit-cloud",
+    "python": "3.12",
+    "status": "prepared_pending_account_sign_in",
+    "model_available": false
+  }
 }

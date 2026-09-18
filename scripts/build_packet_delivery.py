@@ -9,13 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     files = []
-    for folder in ('packet_ids', 'streamlit_app', 'packet_tests', '.streamlit'):
+    for folder in ('packet_ids', 'streamlit_app', 'packet_tests', '.streamlit', 'cloud'):
         files.extend(p for p in (ROOT / folder).rglob('*') if p.is_file()
-                     and '__pycache__' not in p.parts and p.suffix in ('.py', '.css', '.toml'))
+                     and '__pycache__' not in p.parts and p.name != 'secrets.toml'
+                     and p.suffix in ('.py', '.css', '.toml', '.txt'))
     files.extend(ROOT / name for name in ('README.md', 'requirements.txt', 'requirements.lock.txt',
         'start.sh', 'start.bat', 'Start-IDS.command', 'scripts/packet_pipeline.py',
         'scripts/train_packet_bytes.py', 'scripts/build_packet_delivery.py', 'docs/packet_manifest.example.csv',
-        'data/packet_manifest.csv'))
+        'data/packet_manifest.csv', 'docs/CLOUD_DEPLOYMENT.md'))
     for name in ('dataset_audit.json', 'delivery_status.json', 'test_results.xml'):
         path = ROOT / 'output/pytorch' / name
         if path.is_file():

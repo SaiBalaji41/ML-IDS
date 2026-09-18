@@ -1,0 +1,12 @@
+# Streamlit Community Cloud: Python 3.12, Linux CPU only.
+torch @ https://download-r2.pytorch.org/whl/cpu/torch-2.14.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl#sha256=a09987c95ec4cffdb6df798d3d641558110a334cfccce22f2f046d83142bc260
+streamlit==1.64.0
+shap==0.52.0
+scapy==2.7.0
+numpy==2.5.3
+pandas==3.0.6
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+plotly==7.1.0
+pyyaml==6.0.3

@@ -6,6 +6,8 @@ The active project is **Sentinel: a PyTorch 1D-CNN + BiLSTM packet-payload IDS w
 
 ## Run locally
 
+For the hosted Streamlit edition, see [Cloud deployment](docs/CLOUD_DEPLOYMENT.md). Deploy `cloud/app.py` from the `streamlit-cloud` branch with Python 3.12. The hosted entrypoint supports uploaded packet analysis and keeps capture and training controls local.
+
 The Python 3.12 environment on this Mac is installed in `.venv-pytorch`:
 
 ```bash

@@ -106,4 +106,6 @@ data/packet_processed/
 data/packet_captures/
 *.pcapng
 runtime/
+.streamlit/secrets.toml
+.vercel/
 output/delivery/*.npy

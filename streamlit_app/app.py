@@ -11,6 +11,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
+CLOUD_MODE = bool(globals().get('IDS_CLOUD_MODE', False))
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from packet_ids import BYTE_LENGTH
@@ -111,13 +112,19 @@ for key, value in {'events': [], 'total_packets': 0, 'attack_packets': 0, 'revie
 with st.sidebar:
     st.title('sentinel')
     st.html('<div class="brand-note">PACKET INTELLIGENCE / ML-IDS</div>')
-    page = st.radio('Workspace', ['Overview', 'Live capture & PCAP', 'Packet inspector', 'Byte explanations', 'Training & evaluation'],
+    page = st.radio('Workspace', ['Overview', 'PCAP analysis' if CLOUD_MODE else 'Live capture & PCAP',
+                                 'Packet inspector', 'Byte explanations',
+                                 'Model evaluation' if CLOUD_MODE else 'Training & evaluation'],
                     label_visibility='collapsed', key='page')
     st.divider()
     st.caption('MODEL CONTRACT')
     st.markdown('**PyTorch CNN + BiLSTM**')
     st.caption('1,024 raw payload bytes · 1D signals')
-    st.text_input('Model directory', key='model_directory')
+    if CLOUD_MODE:
+        st.session_state.model_directory = str(ROOT / 'models/pytorch_packet_ids')
+        st.caption('Cloud analysis workspace')
+    else:
+        st.text_input('Model directory', key='model_directory')
     service, model_error = selected_service()
     identity = (st.session_state.model_directory, service.metadata['checkpoint_sha256'] if service else None)
     if identity != st.session_state.get('active_model_identity'):
@@ -137,7 +144,8 @@ with st.sidebar:
         st.caption(f"{len(service.labels)} classes · {service.metadata['checkpoint_sha256'][:12]}")
     else:
         st.info('Packet model awaits training')
-    st.html('<div class="sidebar-foot">Local Streamlit application<br>CICIoT2023 IoT captures only<br>No 2D packet-image conversion</div>')
+    environment = 'Hosted Streamlit application' if CLOUD_MODE else 'Local Streamlit application'
+    st.html(f'<div class="sidebar-foot">{environment}<br>CICIoT2023 IoT captures only<br>No 2D packet-image conversion</div>')
 
 
 def overview():
@@ -152,14 +160,15 @@ def overview():
                    'The byte model has not been trained. No earlier flow-model metrics are shown as packet results.')
         a, b = st.columns([1.5, 1])
         with a, st.container(border=False, key="ids_card_downloads"):
-            st.subheader('What is already downloaded?')
+            st.subheader('Training data audit' if CLOUD_MODE else 'What is already downloaded?')
             audit = read_json(ROOT / 'output/pytorch/dataset_audit.json', {})
             st.write(f"{len(audit.get('csv_files', []))} CSV files · {len(audit.get('pcap_files', []))} PCAP files")
-            st.caption('The CSVs contain 46 flow statistics plus a label. They cannot recover the original packet payloads.')
+            st.caption(('Last verified local dataset: ' if CLOUD_MODE else '') +
+                       'The CSVs contain 46 flow statistics plus a label. They cannot recover the original packet payloads.')
             st.code('CICIOT23/\n  train/train.csv\n  validation/validation.csv\n  test/test.csv', language='text')
         with b, st.container(border=False, key="ids_card_data_step"):
             st.subheader('Complete the data step')
-            st.write('Download the raw PCAP edition, verify capture labels, and use Training & evaluation to prepare it.')
+            st.write('Download the raw PCAP edition, verify capture labels, and use Training & evaluation in the local application to prepare it.')
             st.link_button('Official CICIoT2023 dataset', 'https://www.unb.ca/cic/datasets/iotdataset-2023.html')
             st.caption('The official download currently requires registration. Preparation and training commands are included.')
     controls = st.columns([1, 1, 1, 2])
@@ -227,12 +236,16 @@ def overview():
 
 
 def monitoring_page():
-    header('NETWORK MONITORING', 'Live capture and PCAP analysis',
+    header('NETWORK MONITORING', 'PCAP analysis' if CLOUD_MODE else 'Live capture and PCAP analysis',
            'Observe real packet metadata, run the loaded byte model, and inspect alerts.')
-    if 'capture_monitor' not in st.session_state:
-        st.session_state.capture_monitor = CaptureMonitor()
-    monitor = st.session_state.capture_monitor
-    mode = st.radio('Monitoring source', ['Live interface', 'PCAP file'], horizontal=True)
+    if CLOUD_MODE:
+        mode = 'PCAP file'
+        st.caption('Uploaded packets are processed on this hosting service. Use captures you are authorized to share; export results before ending the session. Live capture runs in the local app.')
+    else:
+        if 'capture_monitor' not in st.session_state:
+            st.session_state.capture_monitor = CaptureMonitor()
+        monitor = st.session_state.capture_monitor
+        mode = st.radio('Monitoring source', ['Live interface', 'PCAP file'], horizontal=True)
     if not service:
         st.info('Observation mode: packet addresses and protocols are available. Predictions and confidence need a trained packet model.')
     if mode == 'Live interface':
@@ -412,7 +425,36 @@ def byte_explanations():
     st.download_button('Export byte explanation', json.dumps(result, indent=2), 'byte-shap-explanation.json', 'application/json')
 
 
+def render_saved_evaluation():
+    if service:
+        evaluation = read_json(service.directory / 'evaluation.json', {})
+        if evaluation:
+            st.subheader('Held-out payload evaluation')
+            cols = st.columns(4)
+            for col, key, title in zip(cols, ['accuracy', 'macro_precision', 'macro_recall', 'macro_f1'],
+                                       ['Accuracy', 'Macro precision', 'Macro recall', 'Macro F1']):
+                col.metric(title, f"{evaluation[key]:.2%}")
+            st.caption(f"{evaluation['sample_count']:,} unique held-out payloads. False-positive rate {evaluation['false_positive_rate']:.2%}; false-negative rate {evaluation['false_negative_rate']:.2%}.")
+            cm = np.asarray(evaluation['confusion_matrix'])
+            fig = go.Figure(go.Heatmap(z=cm, x=evaluation['labels'], y=evaluation['labels'], colorscale='Blues',
+                                      hovertemplate='Actual %{y}<br>Predicted %{x}<br>Packets %{z}<extra></extra>'))
+            fig.update_xaxes(title='Predicted class'); fig.update_yaxes(title='Actual class')
+            st.plotly_chart(plot_layout(fig, 380), width='stretch')
+            st.caption('This is an evaluation confusion matrix, not a conversion of packet inputs into images.')
+            frame = pd.DataFrame(evaluation['classwise']).T
+            st.dataframe(frame, width='stretch')
+            st.download_button('Export evaluation JSON', json.dumps(evaluation, indent=2), 'packet-evaluation.json', 'application/json')
+
+
 def training_page():
+    if CLOUD_MODE:
+        header('MODEL EVIDENCE', 'Model evaluation', 'Held-out results from the deployed packet model.')
+        if not service:
+            st.info('No trained packet model is deployed. Evaluation and byte SHAP become available after verified CICIoT2023 PCAP training.')
+        render_saved_evaluation()
+        st.caption('Dataset preparation, training and nested validation run in the local application. Deploy the verified model artifacts together after training.')
+        st.link_button('Training and setup instructions', 'https://github.com/HarshavardhanVemali/ML-IDS#obtain-the-required-data')
+        return
     header('REPRODUCIBLE TRAINING', 'Training & evaluation',
            'Prepare labeled CICIoT2023 captures, train the PyTorch hybrid, and evaluate unseen capture groups.')
     template = ('path,label,split,capture_id,dataset,source_url\n'
@@ -494,24 +536,7 @@ def training_page():
                 fig.update_xaxes(title='Epoch'); fig.update_yaxes(title=title)
                 column.plotly_chart(plot_layout(fig), width='stretch')
     progress()
-    if service:
-        evaluation = read_json(service.directory / 'evaluation.json', {})
-        if evaluation:
-            st.subheader('Held-out payload evaluation')
-            cols = st.columns(4)
-            for col, key, title in zip(cols, ['accuracy', 'macro_precision', 'macro_recall', 'macro_f1'],
-                                       ['Accuracy', 'Macro precision', 'Macro recall', 'Macro F1']):
-                col.metric(title, f"{evaluation[key]:.2%}")
-            st.caption(f"{evaluation['sample_count']:,} unique held-out payloads. False-positive rate {evaluation['false_positive_rate']:.2%}; false-negative rate {evaluation['false_negative_rate']:.2%}.")
-            cm = np.asarray(evaluation['confusion_matrix'])
-            fig = go.Figure(go.Heatmap(z=cm, x=evaluation['labels'], y=evaluation['labels'], colorscale='Blues',
-                                      hovertemplate='Actual %{y}<br>Predicted %{x}<br>Packets %{z}<extra></extra>'))
-            fig.update_xaxes(title='Predicted class'); fig.update_yaxes(title='Actual class')
-            st.plotly_chart(plot_layout(fig, 380), width='stretch')
-            st.caption('This is an evaluation confusion matrix, not a conversion of packet inputs into images.')
-            frame = pd.DataFrame(evaluation['classwise']).T
-            st.dataframe(frame, width='stretch')
-            st.download_button('Export evaluation JSON', json.dumps(evaluation, indent=2), 'packet-evaluation.json', 'application/json')
+    render_saved_evaluation()
 
     st.subheader('Nested validation and bootstrap intervals')
     st.caption('Development captures are divided into outer evaluation folds and inner tuning folds. '
@@ -553,5 +578,5 @@ def training_page():
         st.code('1024 uint8 bytes\n  -> right-pad / truncate / divide by 255\n  -> tensor [batch, 1, 1024]\n  -> Conv1D + ReLU + MaxPool\n  -> Conv1D + ReLU + MaxPool\n  -> ordered 64-region feature sequence\n  -> bidirectional LSTM\n  -> dense classifier\n  -> class probability + byte SHAP', language='text')
         st.caption('Only CICIoT2023 raw IoT payloads are accepted for preparation. NSL-KDD and other legacy tabular datasets are outside the active project. Payloadless traffic is not scored.')
 
-{'Overview': overview, 'Live capture & PCAP': monitoring_page, 'Packet inspector': inspector, 'Byte explanations': byte_explanations,
- 'Training & evaluation': training_page}[page]()
+{'Overview': overview, 'Live capture & PCAP': monitoring_page, 'PCAP analysis': monitoring_page, 'Packet inspector': inspector, 'Byte explanations': byte_explanations,
+ 'Training & evaluation': training_page, 'Model evaluation': training_page}[page]()
