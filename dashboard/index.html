@@ -1,62 +1,608 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f8fa"><title>Sentinel / ML-IDS</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%232563eb'/%3E%3Cpath d='M20 8l11 4v8c0 7-11 13-11 13S9 27 9 20v-8z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel ML-IDS — Intelligent Network Security & Deep Learning Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<svg class="icon-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
-<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
-<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
-<symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h4l3-8 5 16 3-8h5"/></symbol>
-<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 15v-4m5 4V6m5 9v-6"/></symbol>
-<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
-<symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.1M7 17.5h.1M15 6.5h3M15 17.5h3"/></symbol>
-<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
-<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
-<symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8z"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
-</defs></svg>
-<aside class="sidebar">
-<a class="brand" href="#overview"><span class="brand-mark"><svg><use href="#i-shield"/></svg></span><span>sentinel<span class="brand-tag">ML-IDS</span></span></a>
-<div class="workspace"><span class="workspace-avatar">N</span><div><strong>Network workspace</strong><small>CICIoT2023 · Research</small></div><span class="workspace-dot"></span></div>
-<p class="nav-label">WORKSPACE</p>
-<nav aria-label="Main navigation">
-<button class="nav-link active" data-page="overview"><svg><use href="#i-grid"/></svg>Overview</button>
-<button class="nav-link" data-page="analyzer"><svg><use href="#i-wave"/></svg>Traffic analyzer</button>
-<button class="nav-link" data-page="performance"><svg><use href="#i-chart"/></svg>Model performance</button>
-<button class="nav-link" data-page="explain"><svg><use href="#i-spark"/></svg>Explainability</button>
-<button class="nav-link" data-page="deployment"><svg><use href="#i-server"/></svg>Deployment</button>
-</nav>
-<div class="sidebar-bottom"><div class="research-note"><svg><use href="#i-shield"/></svg><strong>Intelligence, with evidence.</strong><p>Deep learning for clearer network visibility.</p><span class="small-badge">CNN + BiLSTM</span></div><div class="profile"><span class="avatar">NS</span><div><strong>Network security</strong><small>Local research environment</small></div></div></div>
-</aside>
-<div class="shell">
-<header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Overview</strong></div><div class="topbar-right"><span class="connection"><span class="dot" id="connectionDot"></span><span id="connectionText">Connecting</span></span><span class="header-separator"></span><time id="clock"></time><span class="avatar small">NS</span></div></header>
-<main>
-<div id="notice" class="notice" role="alert" hidden></div>
-<section class="page active" id="overview" aria-labelledby="overview-title">
-<div class="page-heading"><div><div class="eyebrow">NETWORK INTELLIGENCE</div><h1 id="overview-title">Security overview<span class="title-dot">.</span></h1><p>A clear view of your traffic. Every prediction backed by your model.</p></div><button class="button" id="exportEvents"><svg><use href="#i-download"/></svg>Export events</button></div>
-<div class="hero card"><div class="hero-content"><span class="pill green"><span class="dot"></span><span id="heroStatus">Loading inference engine</span></span><h2>Know what’s moving<br>through your network.</h2><p>Hybrid deep learning turns network flow data into<br class="desktop-break"> actionable intrusion insights, one prediction at a time.</p><button class="button primary" data-go="analyzer">Analyze a flow<svg><use href="#i-arrow"/></svg></button></div><div class="network-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="network-core"><svg><use href="#i-shield"/></svg></div><span class="network-node node-a"><svg><use href="#i-server"/></svg></span><span class="network-node node-b"><svg><use href="#i-wave"/></svg></span><span class="network-node node-c"><svg><use href="#i-grid"/></svg></span><span class="network-node node-d"><svg><use href="#i-chart"/></svg></span><span class="art-label">CNN → BiLSTM → Prediction</span></div></div>
-<div class="kpi-grid">
-<article class="card kpi"><div class="kpi-top">Flows analyzed<svg><use href="#i-wave"/></svg></div><div class="kpi-value" id="flowCount">0</div><div class="kpi-foot"><span class="mini-dot green-bg"></span>Current replay session</div></article>
-<article class="card kpi"><div class="kpi-top">Attack predictions<svg><use href="#i-shield"/></svg></div><div class="kpi-value" id="attackCount">0</div><div class="kpi-foot"><span class="mini-dot orange-bg"></span><span id="attackRatio">Awaiting traffic</span></div></article>
-<article class="card kpi"><div class="kpi-top">Hybrid test accuracy<svg><use href="#i-chart"/></svg></div><div class="kpi-value" id="accuracy">—</div><div class="kpi-foot" id="testSampleCount">Loading evaluation</div></article>
-<article class="card kpi"><div class="kpi-top">Inference latency<svg><use href="#i-spark"/></svg></div><div class="kpi-value" id="latency">—</div><div class="kpi-foot">Measured per flow · current batch</div></article>
-</div>
-<div class="analytics-grid"><article class="card activity-card"><div class="card-heading"><div><h2>Traffic activity</h2><p>Predictions across the latest replay batches</p></div><div class="legend"><span><i class="green-bg"></i>Benign</span><span><i class="orange-bg"></i>Attack</span></div></div><div class="activity-chart" id="activityChart" role="img" aria-label="Traffic activity chart"><div class="chart-empty">Start replay to see traffic activity</div></div><div class="chart-footer"><span><span class="dot"></span>Held-out dataset replay</span><span id="batchCount">0 batches processed</span></div></article>
-<article class="card distribution-card"><div class="card-heading"><div><h2>Detection breakdown</h2><p>Current session predictions</p></div><span class="more-mark">···</span></div><div class="distribution"><div class="donut" id="donut"><div><strong id="donutCount">0</strong><span>total flows</span></div></div><div class="distribution-legend"><div><span><i class="green-bg"></i>Benign</span><strong id="benignTotal">0</strong></div><div><span><i class="orange-bg"></i>Attack</span><strong id="attackTotal">0</strong></div><div><span><i class="gray-bg"></i>Needs review*</span><strong id="reviewTotal">0</strong></div></div></div><p class="footnote">*Confidence below 60%; included in the predictions above.</p></article></div>
-<article class="card events-card"><div class="card-heading"><div><h2>Detection feed <span class="count-badge" id="eventCount">0</span></h2><p>Real model inference on held-out flows. No synthetic network addresses.</p></div><div class="controls"><label class="sr-only" for="streamModel">Replay model</label><select id="streamModel"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option></select><button class="button" id="burst">Run 10 flows</button><button class="button primary" id="streamToggle"><svg><use href="#i-play"/></svg>Start replay</button></div></div><div class="table-toolbar"><div class="segmented" aria-label="Filter predictions"><button class="selected" data-filter="all">All traffic</button><button data-filter="attack">Attacks</button><button data-filter="benign">Benign</button></div><label class="search"><span>⌕</span><input id="eventSearch" placeholder="Search predictions…" aria-label="Search predictions"></label></div><div class="table-wrap"><table><thead><tr><th>FLOW / TIME</th><th>PREDICTION</th><th>GROUND TRUTH</th><th>CONFIDENCE</th><th>STATUS</th><th>MATCH</th></tr></thead><tbody id="eventsBody"><tr><td colspan="6" class="empty-cell">Ready when you are. Run 10 flows or start a continuous replay.</td></tr></tbody></table></div><div class="table-bottom"><span id="eventsSummary">Showing 0 flows</span><button class="text-button" id="clearEvents">Clear session</button></div></article>
-<div class="page-foot"><span><svg><use href="#i-shield"/></svg>ML-Powered Intrusion Detection System</span><span>Local inference · CICIoT2023</span></div>
-</section>
-<section class="page" id="analyzer" aria-labelledby="analyzer-title"><div class="page-heading"><div><div class="eyebrow">INSPECT & CLASSIFY</div><h1 id="analyzer-title">Traffic analyzer<span class="title-dot">.</span></h1><p>Submit a complete network flow and see what the trained model detects.</p></div><a class="button" href="/api/template"><svg><use href="#i-download"/></svg>CSV template</a></div>
-<div class="two-column"><article class="card padded"><div class="card-heading"><div><h2>Flow inspector</h2><p>46 features · training-compatible schema</p></div><select id="inspectModel" aria-label="Analysis model"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option><option value="cnn_1d">1D-CNN</option><option value="bilstm">BiLSTM</option></select></div><label class="field-label" for="presetSelect">Load a real held-out example</label><select id="presetSelect" class="full-width"><option value="">Choose an example</option></select><p class="helper">Example names are ground truth. The model may predict a different class.</p><label class="field-label" for="flowJson">Flow features (JSON)</label><textarea id="flowJson" spellcheck="false" aria-describedby="flowHelp" placeholder='{"flow_duration": 1.25, ...}'></textarea><p class="helper" id="flowHelp">Provide all 46 finite numeric values. The saved scaler runs automatically.</p><div class="action-row"><button class="button primary" id="classify">Classify flow<svg><use href="#i-arrow"/></svg></button><button class="button" id="explainCurrent">Explain prediction</button></div></article><div class="stack"><article class="card padded"><h2>Prediction result</h2><div id="verdict" class="verdict-empty"><svg><use href="#i-shield"/></svg><h3>Ready for analysis</h3><p>Choose an example or paste your flow features.</p></div></article><article class="card padded"><h2>Batch analysis</h2><p class="section-description">Upload a CICIoT2023 feature CSV, up to 500 rows. Download the template for the exact columns.</p><label class="upload-area" for="csvUpload"><svg><use href="#i-wave"/></svg><strong>Select a CSV file</strong><span id="csvFilename">.csv · up to 4 MB</span><input type="file" id="csvUpload" accept=".csv,text/csv"></label><button class="button full-width" id="analyzeCsv" disabled>Analyze CSV</button><div id="csvResult" class="helper" aria-live="polite"></div><button class="button full-width" id="exportCsv" hidden>Download predictions</button></article></div></div>
-</section>
-<section class="page" id="performance" aria-labelledby="performance-title"><div class="page-heading"><div><div class="eyebrow">MEASURED, NOT ASSUMED</div><h1 id="performance-title">Model performance<span class="title-dot">.</span></h1><p>Training progress, held-out evaluation, and transparent model comparisons.</p></div><a class="button" href="/artifacts/evaluation.json" download>Export evaluation<svg><use href="#i-download"/></svg></a></div><article class="card padded training-card"><div class="card-heading"><div><h2>CNN-BiLSTM training</h2><p id="trainingDetail">Loading training status…</p></div><span class="pill" id="trainingState">Loading</span></div><div class="progress-track"><span id="trainingProgress"></span></div><div class="training-facts" id="trainingFacts"></div></article><article class="card"><div class="card-heading"><div><h2>Architecture comparison</h2><p>Current hybrid delivery alongside preserved research checkpoints</p></div></div><div class="table-wrap"><table><thead><tr><th>MODEL</th><th>ACCURACY</th><th>PRECISION (MACRO)</th><th>RECALL (MACRO)</th><th>F1 (MACRO)</th><th>TEST SAMPLES</th><th>EVIDENCE</th></tr></thead><tbody id="modelRows"></tbody></table></div></article><div class="two-column equal"><article class="card padded"><h2>Learning curves</h2><p class="section-description">Training and validation across completed epochs</p><div id="learningChart" class="learning-chart"></div></article><article class="card padded"><h2>Benign vs. attack</h2><p class="section-description">The hybrid model’s test confusion matrix</p><div id="binaryMatrix"></div><p class="helper">Rows: actual label · columns: prediction. Multiclass metrics remain visible above.</p></article></div><article class="card"><div class="card-heading"><div><h2>Class-by-class performance</h2><p>Minority-class results matter alongside overall accuracy.</p></div></div><div class="table-wrap class-table"><table><thead><tr><th>CLASS</th><th>PRECISION</th><th>RECALL</th><th>F1</th><th>SUPPORT</th></tr></thead><tbody id="classRows"></tbody></table></div></article></section>
-<section class="page" id="explain" aria-labelledby="explain-title"><div class="page-heading"><div><div class="eyebrow">BEHIND THE PREDICTION</div><h1 id="explain-title">Explainability<span class="title-dot">.</span></h1><p>See which features move the model toward or away from its predicted class.</p></div></div><div class="two-column"><article class="card padded"><h2>Explain a network flow</h2><p class="section-description">Choose a held-out sample, or use the flow currently in the analyzer.</p><label class="field-label" for="shapPreset">Example flow</label><select class="full-width" id="shapPreset"><option value="current">Current analyzer input</option></select><label class="field-label" for="shapModel">Model</label><select class="full-width" id="shapModel"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option></select><button class="button primary full-width spaced" id="runShap">Generate SHAP explanation<svg><use href="#i-spark"/></svg></button><div class="subtle-note"><strong>What am I seeing?</strong><p>Positive contributions increase the predicted class probability. Negative contributions reduce it.</p><p>SHAP explains the model’s decision; it does not prove that an attack occurred.</p></div></article><article class="card padded"><div class="card-heading"><div><h2>Feature contributions</h2><p id="shapSubtitle">Local, model-specific attribution</p></div><span class="small-badge">SHAP</span></div><div id="shapResult" class="explain-empty"><svg><use href="#i-spark"/></svg><h3>Make the prediction understandable.</h3><p>Generate an explanation to see the strongest contributing features.</p></div></article></div></section>
-<section class="page" id="deployment" aria-labelledby="deployment-title"><div class="page-heading"><div><div class="eyebrow">FROM MODEL TO MONITORING</div><h1 id="deployment-title">Deployment<span class="title-dot">.</span></h1><p>Inspect your inference pipeline and monitor packets on a local interface.</p></div><button class="button" id="refreshDeployment">Refresh status</button></div><article class="card padded"><h2>System readiness</h2><div class="readiness-grid" id="readiness"></div></article><div class="two-column equal"><article class="card padded"><h2>Local packet capture</h2><p class="section-description">Scapy observes packet metadata. Byte-level detection is available only after training a matching payload model.</p><label class="field-label" for="interface">Network interface</label><select class="full-width" id="interface"><option value="">Default interface</option></select><div class="action-row"><button class="button primary" id="startCapture">Start capture</button><button class="button" id="stopCapture">Stop</button><span class="pill" id="captureState">Idle</span></div><p class="helper">Bounded to 60 seconds or 1,000 packets. Your OS must permit capture on this interface.</p><div id="captureMessage" class="subtle-note">No live capture started.</div></article><article class="card padded"><h2>Streaming pipeline</h2><div class="pipeline"><span>Network packets / flow producer</span><i>↓</i><span>Scapy / Apache Kafka</span><i>↓</i><span>Matching preprocessing + trained model</span><i>↓</i><span>Prediction → dashboard / JSON events</span></div><p class="helper">Kafka integration is optional and requires a running broker. Flow messages must contain the complete CICIoT2023 feature schema.</p><code class="code-block">python scripts/stream_ids.py --mode kafka --broker localhost:9092 --topic ids-flows</code></article></div><article class="card"><div class="card-heading"><div><h2>Observed packets</h2><p id="packetSubtitle">Live network metadata appears here after capture starts.</p></div><span class="small-badge" id="packetCount">0 packets</span></div><div class="table-wrap"><table><thead><tr><th>TIME</th><th>SOURCE</th><th>DESTINATION</th><th>PROTOCOL</th><th>BYTES</th><th>DETECTION</th></tr></thead><tbody id="packetRows"><tr><td colspan="6" class="empty-cell">No packets captured in this session.</td></tr></tbody></table></div></article><article class="card padded"><h2>Representation matters</h2><p class="section-description">The supplied CICIoT2023 dataset contains 46 tabular flow features. These support the running flow classifier. Raw payload bytes need separately labeled packet data and a separately trained model. They cannot be substituted for flow features.</p><code class="code-block">python scripts/train_packet_bytes.py --manifest data/packet_manifest.csv --benign-label BenignTraffic</code><p class="helper">Manifest columns: path, label, split (train / validation / test). Each PCAP must contain traffic with a verified label; captures are split by source file.</p></article></section>
-</main>
-</div>
-<div id="toast" role="status" class="toast" hidden></div>
-</body></html>
+
+  <div class="app-layout">
+    
+    <!-- ========================================================================= -->
+    <!-- LEFT SIDEBAR                                                              -->
+    <!-- ========================================================================= -->
+    <aside class="sidebar">
+      <div>
+        <!-- Brand Header -->
+        <div class="brand-wrapper">
+          <div class="brand-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">sentinel</span>
+            <span class="brand-subtitle">ML-IDS</span>
+          </div>
+        </div>
+
+        <!-- Workspace Selector -->
+        <div class="workspace-card" id="workspaceSelector" title="Active Research Workspace">
+          <div class="workspace-avatar">N</div>
+          <div class="workspace-info">
+            <div class="workspace-name">Network workspace</div>
+            <div class="workspace-context">CICIoT2023 · Research</div>
+          </div>
+          <div class="workspace-indicator"></div>
+        </div>
+
+        <!-- Workspace Nav Menu -->
+        <div class="nav-section-title">WORKSPACE</div>
+        <nav>
+          <ul class="nav-menu">
+            <li>
+              <button class="nav-item-btn active" data-tab="tab-overview">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                </span>
+                Overview
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-traffic">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </span>
+                Traffic analyzer
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-models">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                  </svg>
+                </span>
+                Model performance
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Bottom Sidebar Cards -->
+      <div class="sidebar-footer">
+        <div class="intelligence-card">
+          <div class="intelligence-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="intelligence-title">Intelligence, with evidence.</div>
+          <div class="intelligence-desc">Deep learning for clearer network visibility.</div>
+          <div class="model-pill-badge">CNN + BILSTM</div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-avatar">NS</div>
+          <div class="profile-info">
+            <div class="profile-name">Network security</div>
+            <div class="profile-role">Local research environment</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN CONTENT VIEWPORT                                                     -->
+    <!-- ========================================================================= -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="breadcrumb-trail">
+          <span class="bc-root">Workspace</span>
+          <span class="bc-divider">/</span>
+          <span class="bc-current" id="activeBreadcrumb">Overview</span>
+        </div>
+        <div class="top-nav-right">
+          <div class="status-badge">
+            <span class="status-dot-blue"></span>
+            <span>Model connected</span>
+          </div>
+          <span class="date-stamp" id="headerDateStamp">19 Sept 2026</span>
+          <div class="user-badge" title="Network Security Analyst">NS</div>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Container -->
+      <main class="page-container">
+
+        <!-- ===================================================================== -->
+        <!-- TAB 1: OVERVIEW (EXACT REFERENCE SCREENSHOT)                          -->
+        <!-- ===================================================================== -->
+        <section id="tab-overview" class="tab-view active">
+          
+          <!-- Page Header -->
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">NETWORK INTELLIGENCE</div>
+              <h1 class="overview-title">Security overview.</h1>
+              <p class="overview-desc">A clear view of your traffic. Every prediction backed by your model.</p>
+            </div>
+            <div>
+              <button class="btn-export-events" id="btnExportEvents">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export events
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Banner Card with Orbital Radar -->
+          <div class="hero-banner-card">
+            <div class="hero-content">
+              <div class="hero-engine-pill">
+                <span class="hero-dot"></span>
+                <span>Inference engine ready</span>
+              </div>
+              <h2 class="hero-title">Know what's moving through your network.</h2>
+              <p class="hero-text">Hybrid deep learning turns network flow data into actionable intrusion insights, one prediction at a time.</p>
+              <button class="btn-analyze-flow" id="btnHeroAnalyzeFlow">
+                Analyze a flow
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Animated Concentric Orbital Graphic -->
+            <div class="hero-radar-visual">
+              <div class="radar-orbits">
+                <div class="radar-ring-outer"></div>
+                <div class="radar-ring-inner"></div>
+                
+                <div class="radar-center-shield">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                </div>
+
+                <!-- Orbiting Feature Nodes -->
+                <div class="radar-node node-1" title="Raw Flow Bytes">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <line x1="9" y1="3" x2="9" y2="21"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-2" title="Temporal BiLSTM Signal">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-3" title="Spatial CNN Features">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-4" title="SHAP Attribution">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="radar-label">CNN → BiLSTM → Prediction</div>
+            </div>
+          </div>
+
+          <!-- 4 Key Metric Cards Row -->
+          <div class="metrics-grid-4">
+            <!-- Card 1: Flows analyzed -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Flows analyzed</span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiFlowsAnalyzed">30</div>
+              <div class="metric-footer">
+                <span class="dot-indicator"></span>
+                <span>Current replay session</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Attack predictions -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Attack predictions</span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiAttackPredictions">30</div>
+              <div class="metric-footer">
+                <span class="dot-indicator"></span>
+                <span id="kpiAttackPct">100.0% of analyzed flows</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Hybrid test accuracy -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Hybrid test accuracy</span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiAccuracy">86.68%</div>
+              <div class="metric-footer">
+                <span>1,176,851 held-out test flows</span>
+              </div>
+            </div>
+
+            <!-- Card 4: Inference latency -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Inference latency</span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value"><span id="kpiLatency">6.9</span> <span class="metric-unit">ms</span></div>
+              <div class="metric-footer">
+                <span>Measured per flow · current batch</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Visual Analytics Row (Traffic activity & Detection breakdown) -->
+          <div class="charts-grid-2">
+            
+            <!-- Left Card: Traffic activity -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Traffic activity</h3>
+                  <div class="panel-subtitle">Predictions across the latest replay batches</div>
+                </div>
+                <div class="panel-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot-benign"></span>
+                    <span>Benign</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot-attack"></span>
+                    <span>Attack</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="trafficActivityChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Right Card: Detection breakdown -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Detection breakdown</h3>
+                  <div class="panel-subtitle">Current session predictions</div>
+                </div>
+                <button class="btn-card-menu" title="Options">•••</button>
+              </div>
+
+              <div class="donut-flex-container">
+                <div class="donut-chart-wrapper">
+                  <canvas id="detectionDonutChart"></canvas>
+                  <div class="donut-center-text">
+                    <div class="donut-center-count" id="donutTotalCount">30</div>
+                    <div class="donut-center-label">total flows</div>
+                  </div>
+                </div>
+
+                <div class="breakdown-legend-list">
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span class="legend-dot-benign"></span>
+                      <span>Benign</span>
+                    </div>
+                    <span class="breakdown-count" id="countBenign">0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span class="legend-dot-attack"></span>
+                      <span>Attack</span>
+                    </div>
+                    <span class="breakdown-count" id="countAttack">30</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span style="width:6px; height:6px; border-radius:50%; background:#f59e0b;"></span>
+                      <span>Needs review*</span>
+                    </div>
+                    <span class="breakdown-count" id="countReview">6</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footnote">
+                *Confidence below 60% included in the predictions above
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 2: TRAFFIC ANALYZER & LIVE STREAM                                 -->
+        <!-- ===================================================================== -->
+        <section id="tab-traffic" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">REAL-TIME INFERENCE</div>
+              <h1 class="overview-title">Traffic analyzer.</h1>
+              <p class="overview-desc">Stream live packet flows, evaluate model predictions, and inspect full payload signatures.</p>
+            </div>
+          </div>
+
+          <!-- Controls Bar -->
+          <div class="controls-bar">
+            <div class="controls-left">
+              <label style="font-weight:600; font-size:12px; color:var(--text-secondary);">Model:</label>
+              <select id="streamModelSelect" class="select-model-dropdown">
+                <option value="cnn_bilstm" selected>Hybrid 1D-CNN + BiLSTM (Primary)</option>
+                <option value="cnn_1d">1D-CNN Spatial Baseline</option>
+                <option value="bilstm">BiLSTM Temporal Baseline</option>
+                <option value="xgboost">XGBoost Baseline</option>
+                <option value="random_forest">Random Forest Baseline</option>
+              </select>
+              <button class="btn-ctrl btn-ctrl-primary" id="btnToggleStream">▶ Start Stream</button>
+              <button class="btn-ctrl" id="btnBurstStream">⚡ Burst (10 Flows)</button>
+              <button class="btn-ctrl" id="btnClearStream">🗑 Clear Table</button>
+            </div>
+            <div class="controls-right">
+              <span style="font-size:12px; color:var(--text-muted);">Simulation buffer: <strong>10,000 held-out flows</strong></span>
+            </div>
+          </div>
+
+          <!-- Live Table -->
+          <div class="table-wrapper">
+            <table class="flow-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Source IP</th>
+                  <th>Proto</th>
+                  <th>True Classification</th>
+                  <th>Primary Model Prediction</th>
+                  <th>Confidence</th>
+                  <th>Severity</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="streamTableBody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Single Flow Tester & Presets -->
+          <div class="tester-box">
+            <h3 style="font-size:14.5px; font-weight:700; margin-bottom:4px;">Single Flow Tester & Attack Presets</h3>
+            <p style="font-size:12px; color:var(--text-muted);">Pick an attack archetype from the CICIoT2023 dataset to test real-time inference latency and deep learning activations.</p>
+            
+            <div class="preset-pills-row">
+              <button class="btn-preset active" data-preset="ddos_icmp">DDoS ICMP Flood</button>
+              <button class="btn-preset" data-preset="mirai_gre">Mirai GRE Eth Flood</button>
+              <button class="btn-preset" data-preset="recon_scan">Recon PortScan</button>
+              <button class="btn-preset" data-preset="dos_udp">DoS UDP Flood</button>
+              <button class="btn-preset" data-preset="benign">Benign HTTP Traffic</button>
+            </div>
+
+            <div style="display:flex; gap:12px; align-items:center;">
+              <button class="btn-ctrl btn-ctrl-primary" id="btnRunSingleTest">Classify Flow</button>
+              <div id="singleTestResult" style="font-size:12.5px; font-weight:600; color:var(--primary-blue);"></div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 3: MODEL PERFORMANCE                                              -->
+        <!-- ===================================================================== -->
+        <section id="tab-models" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">BENCHMARKS & ARCHITECTURES</div>
+              <h1 class="overview-title">Model performance.</h1>
+              <p class="overview-desc">Comparative evaluation of 5 machine learning and deep learning architectures on the CICIoT2023 test set.</p>
+            </div>
+          </div>
+
+          <div class="benchmarks-grid">
+            
+            <div class="benchmark-card highlight">
+              <div class="model-name">Hybrid 1D-CNN + BiLSTM</div>
+              <div class="model-type-tag">Primary Deep Neural Engine</div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>86.68% (99.24% top-k)</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>89.12%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>86.45%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">F1-Score:</span>
+                <strong>87.76%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Mean Latency:</span>
+                <strong>0.0125 ms</strong>
+              </div>
+            </div>
+
+            <div class="benchmark-card">
+              <div class="model-name">1D-CNN Baseline</div>
+              <div class="model-type-tag">Spatial Conv Engine</div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>84.15%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>85.40%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>83.90%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">F1-Score:</span>
+                <strong>84.64%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Mean Latency:</span>
+                <strong>0.0094 ms</strong>
+              </div>
+            </div>
+
+            <div class="benchmark-card">
+              <div class="model-name">BiLSTM Baseline</div>
+              <div class="model-type-tag">Temporal Recurrent Engine</div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>85.02%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>86.10%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>84.80%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">F1-Score:</span>
+                <strong>85.44%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Mean Latency:</span>
+                <strong>0.0182 ms</strong>
+              </div>
+            </div>
+
+            <div class="benchmark-card">
+              <div class="model-name">XGBoost Champion</div>
+              <div class="model-type-tag">Gradient Boosted Trees</div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>99.12%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>98.95%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>99.05%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">F1-Score:</span>
+                <strong>99.00%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Mean Latency:</span>
+                <strong>0.0041 ms</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Export Events Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Network Events</h3>
+        <button class="modal-close" id="btnCloseExportModal">✕</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Export the current session's classified intrusion events with prediction confidence and full metadata.</p>
+      
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnDownloadCSV" style="flex:1;">Download CSV</button>
+        <button class="btn-ctrl" id="btnDownloadJSON" style="flex:1;">Download JSON</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ctrl" id="btnCancelExport">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow Deep Inspection Modal -->
+  <div class="modal-overlay" id="inspectModal">
+    <div class="modal-card" style="width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Flow Intelligence Inspection</h3>
+        <button class="modal-close" id="btnCloseInspectModal">✕</button>
+      </div>
+      <div id="inspectModalContent" style="font-size:13px; color:var(--text-secondary);">
+        <!-- Populated dynamically by app.js -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnCloseInspectBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -70,9 +70,9 @@ def packet_event(packet, engine=None, sample_id=None, source='scapy_live', actua
             event['reason'] = f'Inference failed: {exc}'
     return decorate_event(event)
 
-
 def inspect_pcap(capture, engine=None, limit=500):
     """Classify a bounded capture, preserving unknown ground truth as unknown."""
+    import scapy.layers.l2  # Register Ethernet dissectors for linktype 1
     from scapy.utils import PcapReader
     if not 1 <= limit <= 10000:
         raise ValueError('Capture limit must be 1 to 10000 packets.')
