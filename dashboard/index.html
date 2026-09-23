@@ -1,62 +1,1725 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f7f8fa"><title>Sentinel / ML-IDS</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%232563eb'/%3E%3Cpath d='M20 8l11 4v8c0 7-11 13-11 13S9 27 9 20v-8z' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentinel ML-IDS — Intelligent Network Security & Deep Learning SOC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<svg class="icon-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
-<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
-<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
-<symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h4l3-8 5 16 3-8h5"/></symbol>
-<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 15v-4m5 4V6m5 9v-6"/></symbol>
-<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
-<symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.1M7 17.5h.1M15 6.5h3M15 17.5h3"/></symbol>
-<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
-<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
-<symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8z"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
-</defs></svg>
-<aside class="sidebar">
-<a class="brand" href="#overview"><span class="brand-mark"><svg><use href="#i-shield"/></svg></span><span>sentinel<span class="brand-tag">ML-IDS</span></span></a>
-<div class="workspace"><span class="workspace-avatar">N</span><div><strong>Network workspace</strong><small>CICIoT2023 · Research</small></div><span class="workspace-dot"></span></div>
-<p class="nav-label">WORKSPACE</p>
-<nav aria-label="Main navigation">
-<button class="nav-link active" data-page="overview"><svg><use href="#i-grid"/></svg>Overview</button>
-<button class="nav-link" data-page="analyzer"><svg><use href="#i-wave"/></svg>Traffic analyzer</button>
-<button class="nav-link" data-page="performance"><svg><use href="#i-chart"/></svg>Model performance</button>
-<button class="nav-link" data-page="explain"><svg><use href="#i-spark"/></svg>Explainability</button>
-<button class="nav-link" data-page="deployment"><svg><use href="#i-server"/></svg>Deployment</button>
-</nav>
-<div class="sidebar-bottom"><div class="research-note"><svg><use href="#i-shield"/></svg><strong>Intelligence, with evidence.</strong><p>Deep learning for clearer network visibility.</p><span class="small-badge">CNN + BiLSTM</span></div><div class="profile"><span class="avatar">NS</span><div><strong>Network security</strong><small>Local research environment</small></div></div></div>
-</aside>
-<div class="shell">
-<header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb">Overview</strong></div><div class="topbar-right"><span class="connection"><span class="dot" id="connectionDot"></span><span id="connectionText">Connecting</span></span><span class="header-separator"></span><time id="clock"></time><span class="avatar small">NS</span></div></header>
-<main>
-<div id="notice" class="notice" role="alert" hidden></div>
-<section class="page active" id="overview" aria-labelledby="overview-title">
-<div class="page-heading"><div><div class="eyebrow">NETWORK INTELLIGENCE</div><h1 id="overview-title">Security overview<span class="title-dot">.</span></h1><p>A clear view of your traffic. Every prediction backed by your model.</p></div><button class="button" id="exportEvents"><svg><use href="#i-download"/></svg>Export events</button></div>
-<div class="hero card"><div class="hero-content"><span class="pill green"><span class="dot"></span><span id="heroStatus">Loading inference engine</span></span><h2>Know what’s moving<br>through your network.</h2><p>Hybrid deep learning turns network flow data into<br class="desktop-break"> actionable intrusion insights, one prediction at a time.</p><button class="button primary" data-go="analyzer">Analyze a flow<svg><use href="#i-arrow"/></svg></button></div><div class="network-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="network-core"><svg><use href="#i-shield"/></svg></div><span class="network-node node-a"><svg><use href="#i-server"/></svg></span><span class="network-node node-b"><svg><use href="#i-wave"/></svg></span><span class="network-node node-c"><svg><use href="#i-grid"/></svg></span><span class="network-node node-d"><svg><use href="#i-chart"/></svg></span><span class="art-label">CNN → BiLSTM → Prediction</span></div></div>
-<div class="kpi-grid">
-<article class="card kpi"><div class="kpi-top">Flows analyzed<svg><use href="#i-wave"/></svg></div><div class="kpi-value" id="flowCount">0</div><div class="kpi-foot"><span class="mini-dot green-bg"></span>Current replay session</div></article>
-<article class="card kpi"><div class="kpi-top">Attack predictions<svg><use href="#i-shield"/></svg></div><div class="kpi-value" id="attackCount">0</div><div class="kpi-foot"><span class="mini-dot orange-bg"></span><span id="attackRatio">Awaiting traffic</span></div></article>
-<article class="card kpi"><div class="kpi-top">Hybrid test accuracy<svg><use href="#i-chart"/></svg></div><div class="kpi-value" id="accuracy">—</div><div class="kpi-foot" id="testSampleCount">Loading evaluation</div></article>
-<article class="card kpi"><div class="kpi-top">Inference latency<svg><use href="#i-spark"/></svg></div><div class="kpi-value" id="latency">—</div><div class="kpi-foot">Measured per flow · current batch</div></article>
-</div>
-<div class="analytics-grid"><article class="card activity-card"><div class="card-heading"><div><h2>Traffic activity</h2><p>Predictions across the latest replay batches</p></div><div class="legend"><span><i class="green-bg"></i>Benign</span><span><i class="orange-bg"></i>Attack</span></div></div><div class="activity-chart" id="activityChart" role="img" aria-label="Traffic activity chart"><div class="chart-empty">Start replay to see traffic activity</div></div><div class="chart-footer"><span><span class="dot"></span>Held-out dataset replay</span><span id="batchCount">0 batches processed</span></div></article>
-<article class="card distribution-card"><div class="card-heading"><div><h2>Detection breakdown</h2><p>Current session predictions</p></div><span class="more-mark">···</span></div><div class="distribution"><div class="donut" id="donut"><div><strong id="donutCount">0</strong><span>total flows</span></div></div><div class="distribution-legend"><div><span><i class="green-bg"></i>Benign</span><strong id="benignTotal">0</strong></div><div><span><i class="orange-bg"></i>Attack</span><strong id="attackTotal">0</strong></div><div><span><i class="gray-bg"></i>Needs review*</span><strong id="reviewTotal">0</strong></div></div></div><p class="footnote">*Confidence below 60%; included in the predictions above.</p></article></div>
-<article class="card events-card"><div class="card-heading"><div><h2>Detection feed <span class="count-badge" id="eventCount">0</span></h2><p>Real model inference on held-out flows. No synthetic network addresses.</p></div><div class="controls"><label class="sr-only" for="streamModel">Replay model</label><select id="streamModel"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option></select><button class="button" id="burst">Run 10 flows</button><button class="button primary" id="streamToggle"><svg><use href="#i-play"/></svg>Start replay</button></div></div><div class="table-toolbar"><div class="segmented" aria-label="Filter predictions"><button class="selected" data-filter="all">All traffic</button><button data-filter="attack">Attacks</button><button data-filter="benign">Benign</button></div><label class="search"><span>⌕</span><input id="eventSearch" placeholder="Search predictions…" aria-label="Search predictions"></label></div><div class="table-wrap"><table><thead><tr><th>FLOW / TIME</th><th>PREDICTION</th><th>GROUND TRUTH</th><th>CONFIDENCE</th><th>STATUS</th><th>MATCH</th></tr></thead><tbody id="eventsBody"><tr><td colspan="6" class="empty-cell">Ready when you are. Run 10 flows or start a continuous replay.</td></tr></tbody></table></div><div class="table-bottom"><span id="eventsSummary">Showing 0 flows</span><button class="text-button" id="clearEvents">Clear session</button></div></article>
-<div class="page-foot"><span><svg><use href="#i-shield"/></svg>ML-Powered Intrusion Detection System</span><span>Local inference · CICIoT2023</span></div>
-</section>
-<section class="page" id="analyzer" aria-labelledby="analyzer-title"><div class="page-heading"><div><div class="eyebrow">INSPECT & CLASSIFY</div><h1 id="analyzer-title">Traffic analyzer<span class="title-dot">.</span></h1><p>Submit a complete network flow and see what the trained model detects.</p></div><a class="button" href="/api/template"><svg><use href="#i-download"/></svg>CSV template</a></div>
-<div class="two-column"><article class="card padded"><div class="card-heading"><div><h2>Flow inspector</h2><p>46 features · training-compatible schema</p></div><select id="inspectModel" aria-label="Analysis model"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option><option value="cnn_1d">1D-CNN</option><option value="bilstm">BiLSTM</option></select></div><label class="field-label" for="presetSelect">Load a real held-out example</label><select id="presetSelect" class="full-width"><option value="">Choose an example</option></select><p class="helper">Example names are ground truth. The model may predict a different class.</p><label class="field-label" for="flowJson">Flow features (JSON)</label><textarea id="flowJson" spellcheck="false" aria-describedby="flowHelp" placeholder='{"flow_duration": 1.25, ...}'></textarea><p class="helper" id="flowHelp">Provide all 46 finite numeric values. The saved scaler runs automatically.</p><div class="action-row"><button class="button primary" id="classify">Classify flow<svg><use href="#i-arrow"/></svg></button><button class="button" id="explainCurrent">Explain prediction</button></div></article><div class="stack"><article class="card padded"><h2>Prediction result</h2><div id="verdict" class="verdict-empty"><svg><use href="#i-shield"/></svg><h3>Ready for analysis</h3><p>Choose an example or paste your flow features.</p></div></article><article class="card padded"><h2>Batch analysis</h2><p class="section-description">Upload a CICIoT2023 feature CSV, up to 500 rows. Download the template for the exact columns.</p><label class="upload-area" for="csvUpload"><svg><use href="#i-wave"/></svg><strong>Select a CSV file</strong><span id="csvFilename">.csv · up to 4 MB</span><input type="file" id="csvUpload" accept=".csv,text/csv"></label><button class="button full-width" id="analyzeCsv" disabled>Analyze CSV</button><div id="csvResult" class="helper" aria-live="polite"></div><button class="button full-width" id="exportCsv" hidden>Download predictions</button></article></div></div>
-</section>
-<section class="page" id="performance" aria-labelledby="performance-title"><div class="page-heading"><div><div class="eyebrow">MEASURED, NOT ASSUMED</div><h1 id="performance-title">Model performance<span class="title-dot">.</span></h1><p>Training progress, held-out evaluation, and transparent model comparisons.</p></div><a class="button" href="/artifacts/evaluation.json" download>Export evaluation<svg><use href="#i-download"/></svg></a></div><article class="card padded training-card"><div class="card-heading"><div><h2>CNN-BiLSTM training</h2><p id="trainingDetail">Loading training status…</p></div><span class="pill" id="trainingState">Loading</span></div><div class="progress-track"><span id="trainingProgress"></span></div><div class="training-facts" id="trainingFacts"></div></article><article class="card"><div class="card-heading"><div><h2>Architecture comparison</h2><p>Current hybrid delivery alongside preserved research checkpoints</p></div></div><div class="table-wrap"><table><thead><tr><th>MODEL</th><th>ACCURACY</th><th>PRECISION (MACRO)</th><th>RECALL (MACRO)</th><th>F1 (MACRO)</th><th>TEST SAMPLES</th><th>EVIDENCE</th></tr></thead><tbody id="modelRows"></tbody></table></div></article><div class="two-column equal"><article class="card padded"><h2>Learning curves</h2><p class="section-description">Training and validation across completed epochs</p><div id="learningChart" class="learning-chart"></div></article><article class="card padded"><h2>Benign vs. attack</h2><p class="section-description">The hybrid model’s test confusion matrix</p><div id="binaryMatrix"></div><p class="helper">Rows: actual label · columns: prediction. Multiclass metrics remain visible above.</p></article></div><article class="card"><div class="card-heading"><div><h2>Class-by-class performance</h2><p>Minority-class results matter alongside overall accuracy.</p></div></div><div class="table-wrap class-table"><table><thead><tr><th>CLASS</th><th>PRECISION</th><th>RECALL</th><th>F1</th><th>SUPPORT</th></tr></thead><tbody id="classRows"></tbody></table></div></article></section>
-<section class="page" id="explain" aria-labelledby="explain-title"><div class="page-heading"><div><div class="eyebrow">BEHIND THE PREDICTION</div><h1 id="explain-title">Explainability<span class="title-dot">.</span></h1><p>See which features move the model toward or away from its predicted class.</p></div></div><div class="two-column"><article class="card padded"><h2>Explain a network flow</h2><p class="section-description">Choose a held-out sample, or use the flow currently in the analyzer.</p><label class="field-label" for="shapPreset">Example flow</label><select class="full-width" id="shapPreset"><option value="current">Current analyzer input</option></select><label class="field-label" for="shapModel">Model</label><select class="full-width" id="shapModel"><option value="cnn_bilstm">CNN-BiLSTM</option><option value="xgboost">XGBoost</option></select><button class="button primary full-width spaced" id="runShap">Generate SHAP explanation<svg><use href="#i-spark"/></svg></button><div class="subtle-note"><strong>What am I seeing?</strong><p>Positive contributions increase the predicted class probability. Negative contributions reduce it.</p><p>SHAP explains the model’s decision; it does not prove that an attack occurred.</p></div></article><article class="card padded"><div class="card-heading"><div><h2>Feature contributions</h2><p id="shapSubtitle">Local, model-specific attribution</p></div><span class="small-badge">SHAP</span></div><div id="shapResult" class="explain-empty"><svg><use href="#i-spark"/></svg><h3>Make the prediction understandable.</h3><p>Generate an explanation to see the strongest contributing features.</p></div></article></div></section>
-<section class="page" id="deployment" aria-labelledby="deployment-title"><div class="page-heading"><div><div class="eyebrow">FROM MODEL TO MONITORING</div><h1 id="deployment-title">Deployment<span class="title-dot">.</span></h1><p>Inspect your inference pipeline and monitor packets on a local interface.</p></div><button class="button" id="refreshDeployment">Refresh status</button></div><article class="card padded"><h2>System readiness</h2><div class="readiness-grid" id="readiness"></div></article><div class="two-column equal"><article class="card padded"><h2>Local packet capture</h2><p class="section-description">Scapy observes packet metadata. Byte-level detection is available only after training a matching payload model.</p><label class="field-label" for="interface">Network interface</label><select class="full-width" id="interface"><option value="">Default interface</option></select><div class="action-row"><button class="button primary" id="startCapture">Start capture</button><button class="button" id="stopCapture">Stop</button><span class="pill" id="captureState">Idle</span></div><p class="helper">Bounded to 60 seconds or 1,000 packets. Your OS must permit capture on this interface.</p><div id="captureMessage" class="subtle-note">No live capture started.</div></article><article class="card padded"><h2>Streaming pipeline</h2><div class="pipeline"><span>Network packets / flow producer</span><i>↓</i><span>Scapy / Apache Kafka</span><i>↓</i><span>Matching preprocessing + trained model</span><i>↓</i><span>Prediction → dashboard / JSON events</span></div><p class="helper">Kafka integration is optional and requires a running broker. Flow messages must contain the complete CICIoT2023 feature schema.</p><code class="code-block">python scripts/stream_ids.py --mode kafka --broker localhost:9092 --topic ids-flows</code></article></div><article class="card"><div class="card-heading"><div><h2>Observed packets</h2><p id="packetSubtitle">Live network metadata appears here after capture starts.</p></div><span class="small-badge" id="packetCount">0 packets</span></div><div class="table-wrap"><table><thead><tr><th>TIME</th><th>SOURCE</th><th>DESTINATION</th><th>PROTOCOL</th><th>BYTES</th><th>DETECTION</th></tr></thead><tbody id="packetRows"><tr><td colspan="6" class="empty-cell">No packets captured in this session.</td></tr></tbody></table></div></article><article class="card padded"><h2>Representation matters</h2><p class="section-description">The supplied CICIoT2023 dataset contains 46 tabular flow features. These support the running flow classifier. Raw payload bytes need separately labeled packet data and a separately trained model. They cannot be substituted for flow features.</p><code class="code-block">python scripts/train_packet_bytes.py --manifest data/packet_manifest.csv --benign-label BenignTraffic</code><p class="helper">Manifest columns: path, label, split (train / validation / test). Each PCAP must contain traffic with a verified label; captures are split by source file.</p></article></section>
-</main>
-</div>
-<div id="toast" role="status" class="toast" hidden></div>
-</body></html>
+
+  <div class="app-layout">
+    
+    <!-- ========================================================================= -->
+    <!-- LEFT SIDEBAR                                                              -->
+    <!-- ========================================================================= -->
+    <aside class="sidebar">
+      <div>
+        <!-- Brand Header -->
+        <div class="brand-wrapper">
+          <div class="brand-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">sentinel</span>
+            <span class="brand-subtitle">ML-IDS · SOC</span>
+          </div>
+        </div>
+
+        <!-- Workspace Selector -->
+        <div class="workspace-card" id="workspaceSelector" title="Active Cyber Research Workspace">
+          <div class="workspace-avatar">N</div>
+          <div class="workspace-info">
+            <div class="workspace-name">Network workspace</div>
+            <div class="workspace-context">CICIoT2023 · Research</div>
+          </div>
+          <div class="workspace-indicator" title="Engine Active"></div>
+        </div>
+
+        <!-- Quick Guide & Video Launcher Buttons in Sidebar -->
+        <div style="padding: 0 4px 12px; display: flex; flex-direction: column; gap: 6px;">
+          <button class="btn-guide-sidebar" id="btnSidebarVideo" style="background: linear-gradient(135deg, #eff6ff 0%, #ede9fe 100%); border-color: #c7d2fe; color: #4338ca;">
+            <span style="font-size:14px;">🎬</span>
+            <span>Video Walkthrough</span>
+            <span class="guide-badge-new" style="background: #4f46e5; color: #ffffff;">HD Video</span>
+          </button>
+          <button class="btn-guide-sidebar" id="btnSidebarGuide">
+            <span style="font-size:14px;">📖</span>
+            <span>How to Use Guide</span>
+            <span class="guide-badge-new">Easy</span>
+          </button>
+        </div>
+
+        <!-- Workspace Nav Menu -->
+        <div class="nav-section-title">WORKSPACE NAVIGATION</div>
+        <nav>
+          <ul class="nav-menu">
+            <li>
+              <button class="nav-item-btn active" data-tab="tab-overview">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                </span>
+                Overview & Live Stream
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-custom-input">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"/>
+                    <line x1="4" y1="10" x2="4" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12" y2="3"/>
+                    <line x1="20" y1="21" x2="20" y2="16"/>
+                    <line x1="20" y1="12" x2="20" y2="3"/>
+                    <line x1="1" y1="14" x2="7" y2="14"/>
+                    <line x1="9" y1="8" x2="15" y2="8"/>
+                    <line x1="17" y1="16" x2="23" y2="16"/>
+                  </svg>
+                </span>
+                Custom Input Studio
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-models">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                  </svg>
+                </span>
+                Model Benchmarks
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-architecture">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                  </svg>
+                </span>
+                Architecture & Pipeline
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-tab="tab-shap-threats">
+                <span class="nav-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                </span>
+                SHAP & Threat Glossary
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Bottom Sidebar Cards -->
+      <div class="sidebar-footer">
+        <div class="intelligence-card">
+          <div class="intelligence-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="intelligence-title">Intelligence, with evidence.</div>
+          <div class="intelligence-desc">Deep learning for clearer network intrusion visibility.</div>
+          <div class="model-pill-badge">CNN + BILSTM · HYBRID</div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-avatar">NS</div>
+          <div class="profile-info">
+            <div class="profile-name">Network Security SOC</div>
+            <div class="profile-role">Intrusion Detection Intelligence</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN CONTENT VIEWPORT                                                     -->
+    <!-- ========================================================================= -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navbar -->
+      <header class="top-navbar">
+        <div class="top-nav-right">
+          
+          <!-- Mode Switcher: Easy/Simple Mode vs Deep SOC Mode -->
+          <div class="mode-toggle-wrapper" title="Switch between Simple Beginner-Friendly view and Deep SOC Engineer view">
+            <button class="mode-toggle-btn active" id="btnModeSimple">
+              <span>🌱 Simple View</span>
+            </button>
+            <button class="mode-toggle-btn" id="btnModeDeep">
+              <span>⚡ Deep SOC</span>
+            </button>
+          </div>
+
+          <!-- Interactive Guided Tour Button -->
+          <button class="btn-tour-pill" id="btnInteractiveTour" title="Start a quick 1-minute guided tour of the entire app">
+            <span style="font-size:13px;">🎯</span>
+            <span>Interactive Tour</span>
+          </button>
+
+          <button class="btn-top-guide" id="btnTopGuide" title="Open How-To Guide">
+            <span style="font-size:13px;">💡</span>
+            <span>Help Guide</span>
+          </button>
+
+          <div class="status-badge" title="AI Inference Engine Online & Ready">
+            <span class="status-dot-blue"></span>
+            <span id="topNavModelStatus">5 Models Active · Hybrid 1D-CNN + BiLSTM</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Container -->
+      <main class="page-container">
+
+        <!-- Dismissible Friendly Welcome Helper Banner -->
+        <div class="welcome-helper-banner" id="welcomeHelperBanner">
+          <div class="helper-icon">🛡️</div>
+          <div class="helper-body">
+            <div class="helper-title">👋 Welcome to Sentinel ML-IDS — Easy Intrusion Detection!</div>
+            <div class="helper-text">
+              This app uses <strong>Artificial Intelligence (Deep Learning)</strong> to protect computer networks by detecting cyber attacks in real-time.
+              <div style="margin-top:6px; display:flex; gap:12px; flex-wrap:wrap;">
+                <span>👉 <strong>Try It Out:</strong> Click any of the 3 scenario buttons below to see instant AI decisions!</span>
+                <span>🎬 <a href="javascript:void(0)" onclick="openVideoGuideModal()" class="helper-link">Watch 1-Minute Video Guide</a></span>
+                <span>🎯 <a href="javascript:void(0)" onclick="startInteractiveTour()" class="helper-link">Interactive Tour</a></span>
+              </div>
+            </div>
+          </div>
+          <button class="helper-dismiss" id="btnDismissHelper" title="Dismiss banner">✕</button>
+        </div>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 1: OVERVIEW & LIVE SOC MONITORING                                 -->
+        <!-- ===================================================================== -->
+        <section id="tab-overview" class="tab-view active">
+          
+          <!-- Page Header -->
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">NETWORK SECURITY & REAL-TIME AI TELEMETRY</div>
+              <h1 class="overview-title">Security Overview & Live Stream</h1>
+              <p class="overview-desc">Real-time network traffic monitoring powered by Deep Learning (1D-CNN + BiLSTM) and Gradient Boosted Trees.</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-ctrl" id="btnHeaderVideoGuide" style="background:#f5f3ff; color:#6d28d9; border-color:#ddd6fe; font-weight:700;">
+                🎬 Watch Video Guide
+              </button>
+              <button class="btn-ctrl" id="btnOpenGuideModal" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">
+                📖 Quick Guide
+              </button>
+              <button class="btn-export-events" id="btnExportEvents">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export Events
+              </button>
+            </div>
+          </div>
+
+          <!-- 1-Click Interactive Quick Test Scenarios Bar -->
+          <div class="quick-scenarios-panel">
+            <div class="qsp-header">
+              <div class="qsp-title">
+                <span>🚀 Quick Test Scenarios (Click to test instantly without technical setup):</span>
+              </div>
+              <span class="qsp-sub">See how AI responds in under 0.015 ms</span>
+            </div>
+            <div class="scenarios-grid-3">
+              
+              <!-- Scenario 1: Normal Traffic -->
+              <div class="scenario-card card-benign" onclick="quickTestScenario('benign')">
+                <div class="sc-icon">🟢</div>
+                <div class="sc-body">
+                  <div class="sc-title">1. Normal Web Browsing (Safe)</div>
+                  <div class="sc-desc">Simulates a regular user loading a website over HTTP. AI marks it <strong>Safe to Pass (Benign)</strong>.</div>
+                  <button class="btn-try-scenario">▶ Test Safe Traffic</button>
+                </div>
+              </div>
+
+              <!-- Scenario 2: Volumetric DDoS -->
+              <div class="scenario-card card-ddos" onclick="quickTestScenario('ddos')">
+                <div class="sc-icon">🔴</div>
+                <div class="sc-body">
+                  <div class="sc-title">2. Volumetric DDoS Attack</div>
+                  <div class="sc-desc">Simulates 28,500 packets/s flood trying to crash servers. AI detects & <strong>Blocks Instantly</strong>.</div>
+                  <button class="btn-try-scenario btn-try-red">⚡ Test DDoS Attack</button>
+                </div>
+              </div>
+
+              <!-- Scenario 3: Mirai Botnet -->
+              <div class="scenario-card card-botnet" onclick="quickTestScenario('mirai')">
+                <div class="sc-icon">🟠</div>
+                <div class="sc-body">
+                  <div class="sc-title">3. Mirai IoT Botnet Strike</div>
+                  <div class="sc-desc">Simulates smart cameras infected with Mirai botnet GRE tunnels. AI spots <strong>Hidden Signature</strong>.</div>
+                  <button class="btn-try-scenario btn-try-amber">🔍 Test Botnet Attack</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Hero Banner Card with Orbital Radar -->
+          <div class="hero-banner-card">
+            <div class="hero-content">
+              <div class="hero-engine-pill">
+                <span class="hero-dot"></span>
+                <span>AI Inference Engine Online · 0.0125 ms Latency (Line-Rate)</span>
+              </div>
+              <h2 class="hero-title">Protecting your network with intelligent AI.</h2>
+              <p class="hero-text">Our hybrid neural network uses 1D-CNN spatial filters to scan packet headers and BiLSTM recurrent memory to track packet order, stopping 99.2% of attacks.</p>
+              <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;">
+                <button class="btn-analyze-flow" id="btnHeroAnalyzeFlow">
+                  ⚡ Test Custom Input Studio
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </button>
+                <button class="btn-ctrl" id="btnHeroExploreModels" style="background:#ffffff; color:#0f172a; border-color:#cbd5e1;">
+                  📊 Compare 5 Models
+                </button>
+                <button class="btn-ctrl" id="btnHeroThreatGlossary" style="background:rgba(255,255,255,0.15); color:#ffffff; border-color:rgba(255,255,255,0.3);">
+                  🔍 Threat Glossary
+                </button>
+              </div>
+            </div>
+
+            <!-- Animated Concentric Orbital Graphic -->
+            <div class="hero-radar-visual">
+              <div class="radar-orbits">
+                <div class="radar-ring-outer"></div>
+                <div class="radar-ring-inner"></div>
+                
+                <div class="radar-center-shield">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4"/>
+                  </svg>
+                </div>
+
+                <!-- Orbiting Feature Nodes -->
+                <div class="radar-node node-1" title="1,024-Byte Transport Payload: Raw packet data">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <line x1="9" y1="3" x2="9" y2="21"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-2" title="Temporal BiLSTM Core: Forward & backward sequence memory">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-3" title="Spatial 1D-CNN: Local byte n-gram pattern scanner">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                  </svg>
+                </div>
+                <div class="radar-node node-4" title="SHAP Attribution: Explains why the AI flagged the packet">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="radar-label">Conv1D ➔ BiLSTM ➔ Prediction</div>
+            </div>
+          </div>
+
+          <!-- 4 Key Metric Cards Row with Tooltips -->
+          <div class="metrics-grid-4">
+            <!-- Card 1: Flows analyzed -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">
+                  Flows analyzed
+                  <span class="info-tip" title="Total count of network sessions or packet flows analyzed by the system in this session.">ℹ️</span>
+                </span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiFlowsAnalyzed">30</div>
+              <div class="metric-footer">
+                <span class="dot-indicator"></span>
+                <span>Active simulation stream</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Attack predictions -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">
+                  Attack predictions
+                  <span class="info-tip" title="Number of network flows classified as malicious cyber attacks.">ℹ️</span>
+                </span>
+                <span class="metric-icon" style="color:var(--accent-red); background:#fef2f2;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiAttackPredictions" style="color:var(--accent-red);">30</div>
+              <div class="metric-footer">
+                <span class="dot-indicator" style="background:var(--accent-red);"></span>
+                <span id="kpiAttackPct">100.0% of analyzed traffic</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Hybrid test accuracy -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">
+                  Hybrid test accuracy
+                  <span class="info-tip" title="Accuracy measured on 1,176,851 held-out test flows from the CICIoT2023 benchmark. Top-k accuracy reaches 99.24%.">ℹ️</span>
+                </span>
+                <span class="metric-icon" style="color:var(--accent-green); background:#f0fdf4;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 14 14"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value" id="kpiAccuracy" style="color:var(--accent-green);">86.68%</div>
+              <div class="metric-footer">
+                <span>99.24% top-k · 1.17M test flows</span>
+              </div>
+            </div>
+
+            <!-- Card 4: Inference latency -->
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">
+                  Inference latency
+                  <span class="info-tip" title="Time taken by the AI engine to inspect and classify each packet flow (sub-millisecond line rate).">ℹ️</span>
+                </span>
+                <span class="metric-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                </span>
+              </div>
+              <div class="metric-value"><span id="kpiLatency">0.0125</span> <span class="metric-unit">ms</span></div>
+              <div class="metric-footer">
+                <span>Measured per flow · Sub-millisecond</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Visual Analytics Row (Traffic activity & Detection breakdown) -->
+          <div class="charts-grid-2">
+            
+            <!-- Left Card: Traffic activity -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Traffic activity</h3>
+                  <div class="panel-subtitle">Real-time classification distribution across replay batches</div>
+                </div>
+                <div class="panel-legend">
+                  <div class="legend-item">
+                    <span class="legend-dot-benign"></span>
+                    <span>Benign (Safe)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-dot-attack"></span>
+                    <span>Attack (Blocked)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="trafficActivityChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Right Card: Detection breakdown -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Detection breakdown</h3>
+                  <div class="panel-subtitle">Current session prediction ratio & triage alert status</div>
+                </div>
+                <div class="panel-badge-pill">Live Ratio</div>
+              </div>
+
+              <div class="donut-flex-container">
+                <div class="donut-chart-wrapper">
+                  <canvas id="detectionDonutChart"></canvas>
+                  <div class="donut-center-text">
+                    <div class="donut-center-count" id="donutTotalCount">30</div>
+                    <div class="donut-center-label">total flows</div>
+                  </div>
+                </div>
+
+                <div class="breakdown-legend-list">
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span class="legend-dot-benign"></span>
+                      <span>Benign (Safe Traffic)</span>
+                    </div>
+                    <span class="breakdown-count" id="countBenign">0</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span class="legend-dot-attack"></span>
+                      <span>Attack (Malicious)</span>
+                    </div>
+                    <span class="breakdown-count" id="countAttack">30</span>
+                  </div>
+                  <div class="breakdown-item">
+                    <div class="breakdown-label-group">
+                      <span style="width:7px; height:7px; border-radius:50%; background:#f59e0b;"></span>
+                      <span>Needs review*</span>
+                    </div>
+                    <span class="breakdown-count" id="countReview">6</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footnote">
+                *Confidence below 60% is automatically flagged for Tier-2 SOC Analyst manual review.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Live Network Intrusion Stream Feed -->
+          <div class="card-panel" style="margin-top:20px;">
+            <div class="card-panel-header" style="flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 class="panel-title">Live Replay Stream & Packet Feed</h3>
+                <div class="panel-subtitle">Streaming classified flows from the CICIoT2023 held-out test dataset</div>
+              </div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <button class="btn-ctrl btn-ctrl-primary" id="btnToggleStream" title="Start/Stop the real-time flow stream">▶ Start Stream</button>
+                <button class="btn-ctrl" id="btnBurstStream" title="Inject 10 simulated flows at once">⚡ Burst (10 Flows)</button>
+                <button class="btn-ctrl" id="btnClearStream" title="Reset the stream table">🗑 Clear Feed</button>
+              </div>
+            </div>
+
+            <!-- Feed Filter Controls -->
+            <div class="stream-filter-bar">
+              <div class="filter-group">
+                <label>Filter Traffic:</label>
+                <select id="filterTrafficType" class="select-dropdown">
+                  <option value="all">All Traffic</option>
+                  <option value="attack">Attacks Only (Malicious)</option>
+                  <option value="benign">Benign Only (Safe)</option>
+                  <option value="review">Needs Review (&lt;60%)</option>
+                </select>
+              </div>
+              <div class="filter-group" style="flex:1;">
+                <label>Search Feed:</label>
+                <input type="text" id="filterSearchInput" class="text-input-field" placeholder="Try searching IP, protocol, or attack (e.g., 'icmp', 'mirai', '192.168')...">
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="flow-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Source IP</th>
+                    <th>Proto</th>
+                    <th>True Classification</th>
+                    <th>Primary Model Prediction</th>
+                    <th>Confidence</th>
+                    <th>Severity</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="streamTableBody">
+                  <!-- Populated dynamically by app.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 2: CUSTOM FLOW & PACKET INPUT STUDIO                              -->
+        <!-- ===================================================================== -->
+        <section id="tab-custom-input" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">INTERACTIVE INFERENCE ENGINE</div>
+              <h1 class="overview-title">Custom input studio.</h1>
+              <p class="overview-desc">Provide your own custom inputs! Drag sliders, load 1-click presets, or paste raw hex bytes to test how AI detects attacks in real time.</p>
+            </div>
+          </div>
+
+          <!-- Studio Sub-Mode Navigation Switcher -->
+          <div class="submode-switcher">
+            <button class="submode-btn active" data-submode="submode-tabular">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="9" y1="21" x2="9" y2="9"/>
+              </svg>
+              Mode A: NetFlow Feature Builder (Sliders & Presets)
+            </button>
+            <button class="submode-btn" data-submode="submode-byte">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 7 4 4 20 4 20 7"/>
+                <line x1="9" y1="20" x2="15" y2="20"/>
+                <line x1="12" y1="4" x2="12" y2="20"/>
+              </svg>
+              Mode B: Raw Byte & Hex Inspector (1,024-Byte Payload)
+            </button>
+            <button class="submode-btn" data-submode="submode-file">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Mode C: Offline PCAP / CSV Upload
+            </button>
+          </div>
+
+          <!-- =================================================================== -->
+          <!-- SUB-MODE A: NETFLOW FEATURE BUILDER (TABULAR)                       -->
+          <!-- =================================================================== -->
+          <div id="submode-tabular" class="submode-pane active">
+            
+            <!-- 1-Click Preset Template Loader -->
+            <div class="tester-box" style="margin-bottom:18px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:6px;">
+                <h3 style="font-size:14px; font-weight:700;">⚡ 1-Click Attack Presets (Try These First!)</h3>
+                <span style="font-size:11.5px; color:var(--text-muted);">Click any preset to instantly configure the sliders with realistic attack signatures:</span>
+              </div>
+              
+              <div class="preset-pills-row">
+                <button class="btn-preset active" data-preset="benign" title="Legitimate web browsing over HTTP/TLS">🟢 Benign HTTP Traffic</button>
+                <button class="btn-preset" data-preset="ddos_icmp" title="Overwhelming stream of ICMP ping requests">🔴 DDoS ICMP Flood</button>
+                <button class="btn-preset" data-preset="mirai_gre" title="Mirai IoT botnet encapsulated GRE attack">🟠 Mirai GRE Eth Flood</button>
+                <button class="btn-preset" data-preset="recon_scan" title="Attacker scanning ports to find vulnerabilities">🟡 Recon PortScan</button>
+                <button class="btn-preset" data-preset="dos_udp" title="High-volume UDP datagram saturation">🔴 DoS UDP Flood</button>
+                <button class="btn-preset" data-preset="syn_flood" title="Massive flood of TCP connection requests (SYN)">🔴 DDoS SYN Flood</button>
+                <button class="btn-preset" data-preset="sql_injection" title="Database exploitation attempt via web payload">🟣 SQL Injection Exploit</button>
+                <button class="btn-preset" data-preset="slowloris" title="Stealthy low-and-slow HTTP starvation attack">🟠 DDoS SlowLoris</button>
+                <button class="btn-preset" data-preset="arp_spoof" title="Man-In-The-Middle local ARP cache poisoning">🟡 MITM ARP Spoofing</button>
+              </div>
+            </div>
+
+            <!-- Two Column Layout: Left Form Inputs | Right Prediction Results -->
+            <div class="custom-input-grid">
+              
+              <!-- LEFT: Input Controls Form -->
+              <div class="card-panel">
+                <div class="card-panel-header">
+                  <div>
+                    <h3 class="panel-title">Craft Custom Flow Parameters</h3>
+                    <div class="panel-subtitle">Adjust network headers, flow rates, and TCP flags</div>
+                  </div>
+                  <div>
+                    <button class="btn-ctrl" id="btnResetCustomForm" style="font-size:11px; padding:3px 8px;">↺ Reset Values</button>
+                  </div>
+                </div>
+
+                <form id="customFlowForm">
+                  
+                  <!-- Section 1: Network & Protocol Layer -->
+                  <div class="form-section-title">1. Network & Protocol Layer</div>
+                  <div class="form-row-3">
+                    <div class="form-field">
+                      <label>
+                        Protocol Type
+                        <span class="info-tip" title="Network transport layer protocol (e.g., TCP for reliable streams, UDP for speed, ICMP for pings).">ℹ️</span>
+                      </label>
+                      <select id="inpProtocol" class="select-dropdown">
+                        <option value="TCP">TCP (Transmission Control)</option>
+                        <option value="UDP">UDP (User Datagram)</option>
+                        <option value="ICMP">ICMP (Ping / Echo)</option>
+                        <option value="GRE">GRE (Generic Routing Encapsulation)</option>
+                        <option value="HTTP">HTTP (Hypertext Transfer)</option>
+                        <option value="HTTPS">HTTPS / TLS</option>
+                        <option value="DNS">DNS (Domain Name System)</option>
+                      </select>
+                    </div>
+                    <div class="form-field">
+                      <label>Source IP Address</label>
+                      <input type="text" id="inpSourceIP" class="text-input-field" value="192.168.1.105">
+                    </div>
+                    <div class="form-field">
+                      <label>Destination Port</label>
+                      <input type="number" id="inpDestPort" class="text-input-field" value="80" min="1" max="65535">
+                    </div>
+                  </div>
+
+                  <!-- Section 2: Flow Dynamics & Volume -->
+                  <div class="form-section-title" style="margin-top:14px;">2. Flow Dynamics & Volume Rates</div>
+                  <div class="form-row-2">
+                    <div class="form-slider-field">
+                      <div class="slider-header">
+                        <label>
+                          Flow Duration (seconds)
+                          <span class="info-tip" title="Total duration of this network conversation in seconds. Short durations with high rates indicate flood attacks.">ℹ️</span>
+                        </label>
+                        <span class="slider-val" id="valDuration">0.05</span>
+                      </div>
+                      <input type="range" id="rngDuration" min="0.001" max="10.0" step="0.001" value="0.05" class="slider-range">
+                    </div>
+                    <div class="form-slider-field">
+                      <div class="slider-header">
+                        <label>
+                          Packet Rate (pkts / sec)
+                          <span class="info-tip" title="How many packets arrive per second. Rates over 10,000/s are strong indicators of volumetric DDoS floods.">ℹ️</span>
+                        </label>
+                        <span class="slider-val" id="valRate">12500.0</span>
+                      </div>
+                      <input type="range" id="rngRate" min="0" max="50000" step="100" value="12500" class="slider-range">
+                    </div>
+                  </div>
+
+                  <div class="form-row-2" style="margin-top:10px;">
+                    <div class="form-slider-field">
+                      <div class="slider-header">
+                        <label>
+                          Header Length (bytes)
+                          <span class="info-tip" title="Size of the IP and transport protocol header envelope. Unusual sizes indicate tunneling or fragmentation.">ℹ️</span>
+                        </label>
+                        <span class="slider-val" id="valHeaderLen">54</span>
+                      </div>
+                      <input type="range" id="rngHeaderLen" min="14" max="1500" step="1" value="54" class="slider-range">
+                    </div>
+                    <div class="form-slider-field">
+                      <div class="slider-header">
+                        <label>
+                          Total Size (bytes)
+                          <span class="info-tip" title="Total accumulated bytes transferred in the session.">ℹ️</span>
+                        </label>
+                        <span class="slider-val" id="valTotSize">1400</span>
+                      </div>
+                      <input type="range" id="rngTotSize" min="20" max="65535" step="10" value="1400" class="slider-range">
+                    </div>
+                  </div>
+
+                  <!-- Section 3: TCP Flags & Packet Counters -->
+                  <div class="form-section-title" style="margin-top:14px;">3. TCP Flags & Attack Signatures</div>
+                  <div class="flags-grid">
+                    <label class="checkbox-pill" title="SYN (Synchronize): Requests a new connection.">
+                      <input type="checkbox" id="chkSYN" checked>
+                      <span>SYN Flag</span>
+                    </label>
+                    <label class="checkbox-pill" title="ACK (Acknowledge): Confirms receipt of packets.">
+                      <input type="checkbox" id="chkACK" checked>
+                      <span>ACK Flag</span>
+                    </label>
+                    <label class="checkbox-pill" title="FIN (Finish): Closes an established connection gracefully.">
+                      <input type="checkbox" id="chkFIN">
+                      <span>FIN Flag</span>
+                    </label>
+                    <label class="checkbox-pill" title="RST (Reset): Forcibly aborts a connection.">
+                      <input type="checkbox" id="chkRST">
+                      <span>RST Flag</span>
+                    </label>
+                    <label class="checkbox-pill" title="PSH (Push): Forces immediate application processing.">
+                      <input type="checkbox" id="chkPSH">
+                      <span>PSH Flag</span>
+                    </label>
+                    <label class="checkbox-pill" title="URG (Urgent): Priority data flag.">
+                      <input type="checkbox" id="chkURG">
+                      <span>URG Flag</span>
+                    </label>
+                  </div>
+
+                  <div class="form-row-3" style="margin-top:10px;">
+                    <div class="form-field">
+                      <label>SYN Count</label>
+                      <input type="number" id="inpSynCount" class="text-input-field" value="2" min="0">
+                    </div>
+                    <div class="form-field">
+                      <label>ACK Count</label>
+                      <input type="number" id="inpAckCount" class="text-input-field" value="5" min="0">
+                    </div>
+                    <div class="form-field">
+                      <label>RST Count</label>
+                      <input type="number" id="inpRstCount" class="text-input-field" value="0" min="0">
+                    </div>
+                  </div>
+
+                  <!-- Run Prediction Button Bar -->
+                  <div style="margin-top:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:220px;">
+                      <label style="font-size:11.5px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">
+                        Evaluate with Model:
+                      </label>
+                      <select id="customEvaluatorModel" class="select-dropdown" style="width:100%;">
+                        <option value="cnn_bilstm" selected>Hybrid 1D-CNN + BiLSTM (Primary Neural Engine)</option>
+                        <option value="xgboost">XGBoost Champion (Gradient Boosted Trees)</option>
+                        <option value="random_forest">Random Forest Baseline (Bagged Ensemble)</option>
+                        <option value="cnn_1d">1D-CNN Baseline (Spatial Convolution)</option>
+                        <option value="bilstm">BiLSTM Baseline (Temporal Recurrent)</option>
+                      </select>
+                    </div>
+                    <button type="button" class="btn-ctrl btn-ctrl-primary" id="btnRunCustomPrediction" style="height:42px; margin-top:18px; padding:0 24px; font-weight:700;">
+                      ⚡ Classify Custom Flow
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+              <!-- RIGHT: Real-Time Prediction & Explainability Output Card -->
+              <div class="card-panel prediction-output-panel">
+                <div class="card-panel-header">
+                  <div>
+                    <h3 class="panel-title">AI Decision & Plain-English Verdict</h3>
+                    <div class="panel-subtitle">Real-time classification, confidence score, and explanation</div>
+                  </div>
+                  <div class="panel-badge-pill" id="predEngineTag">Hybrid 1D-CNN + BiLSTM</div>
+                </div>
+
+                <!-- Main Prediction Result Banner -->
+                <div class="prediction-hero-box" id="predictionHeroBox">
+                  <div class="pred-label-row">
+                    <span class="pred-title-label">Model Verdict:</span>
+                    <span class="pred-badge-sev sev-benign" id="predSevBadge">BENIGN</span>
+                  </div>
+                  <div class="pred-class-name" id="predClassName">BenignTraffic</div>
+                  <div class="pred-meta-sub" id="predMetaSub">No malicious indicators detected in flow parameters</div>
+
+                  <!-- Confidence Meter -->
+                  <div class="confidence-meter-wrapper" style="margin-top:14px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:4px;">
+                      <span>Confidence Score:</span>
+                      <span id="predConfidenceVal">99.85%</span>
+                    </div>
+                    <div class="meter-bar-track">
+                      <div class="meter-bar-fill" id="predConfidenceBar" style="width: 99.85%; background: var(--accent-green);"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Diagnostics Stats Grid -->
+                <div class="diagnostics-grid">
+                  <div class="diag-card">
+                    <div class="diag-title">Inference Latency</div>
+                    <div class="diag-val" id="diagLatency">0.0125 ms</div>
+                  </div>
+                  <div class="diag-card">
+                    <div class="diag-title">Triage Status</div>
+                    <div class="diag-val" id="diagTriage">Safe (Pass)</div>
+                  </div>
+                  <div class="diag-card">
+                    <div class="diag-title">Risk Assessment</div>
+                    <div class="diag-val" id="diagRisk">Low Risk</div>
+                  </div>
+                </div>
+
+                <!-- 3-Part Plain English AI Explanation Card -->
+                <div class="plain-english-verdict-box" id="plainVerdictBox" style="margin-top:14px;">
+                  <div class="pe-verdict-item">
+                    <div class="pe-title">🔍 1. What was detected?</div>
+                    <div class="pe-desc" id="peWhat">Normal HTTP/TLS web transaction with balanced SYN and ACK packets.</div>
+                  </div>
+                  <div class="pe-verdict-item">
+                    <div class="pe-title">🧠 2. Why did the AI decide this?</div>
+                    <div class="pe-desc" id="peWhy">Packet arrival rate (85 pkts/s) is within regular user browsing bounds with standard header lengths.</div>
+                  </div>
+                  <div class="pe-verdict-item">
+                    <div class="pe-title">🛡️ 3. Recommended Defense Action</div>
+                    <div class="pe-desc" id="peAction">Permit traffic through the firewall; maintain routine monitoring.</div>
+                  </div>
+                </div>
+
+                <!-- Top Influencing Features (SHAP Local Attribution) -->
+                <div style="margin-top:14px;">
+                  <div style="font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:6px;">
+                    Key Contributing Features (SHAP Attribution)
+                  </div>
+                  <div class="shap-contrib-list" id="shapContribList">
+                    <div class="shap-row">
+                      <span class="shap-feature-name">Header_Length (54B)</span>
+                      <span class="shap-feature-bar-wrap"><span class="shap-bar-fill" style="width:78%;"></span></span>
+                      <span class="shap-val">+0.42</span>
+                    </div>
+                    <div class="shap-row">
+                      <span class="shap-feature-name">Packet Rate (12.5k/s)</span>
+                      <span class="shap-feature-bar-wrap"><span class="shap-bar-fill" style="width:65%;"></span></span>
+                      <span class="shap-val">+0.35</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="margin-top:14px; padding-top:10px; border-top:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11.5px; color:var(--text-muted);">Inject this custom test into the live session feed?</span>
+                  <button class="btn-ctrl" id="btnInjectCustomFeed" style="font-size:11.5px; padding:3px 10px;">+ Inject to Feed</button>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- =================================================================== -->
+          <!-- SUB-MODE B: RAW BYTE & HEX INSPECTOR (1,024-BYTE PAYLOAD)           -->
+          <!-- =================================================================== -->
+          <div id="submode-byte" class="submode-pane">
+            
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Raw Byte & Hex Payload Inspector</h3>
+                  <div class="panel-subtitle">Directly paste packet hex strings or ASCII payloads for PyTorch 1D-CNN + BiLSTM deep inspection</div>
+                </div>
+                <div class="panel-badge-pill">PyTorch Payload Engine</div>
+              </div>
+
+              <div style="margin-bottom:12px;">
+                <label style="font-size:12px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">
+                  Payload Input (Hexadecimal bytes or ASCII text):
+                </label>
+                <textarea id="rawPayloadInput" class="text-area-field" rows="3" placeholder="08 00 4d 5a 00 00 00 00 50 02 20 00 ... or GET /index.html HTTP/1.1">08 00 4d 5a 00 00 00 00 00 00 00 00 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37</textarea>
+              </div>
+
+              <!-- Quick Payload Presets -->
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+                <button class="btn-ctrl" id="btnBytePresetICMP" style="font-size:11px;">🔴 ICMP Echo Flood</button>
+                <button class="btn-ctrl" id="btnBytePresetHTTP" style="font-size:11px;">🟢 Benign HTTP GET</button>
+                <button class="btn-ctrl" id="btnBytePresetSQLi" style="font-size:11px;">🟣 SQL Injection String</button>
+                <button class="btn-ctrl" id="btnBytePresetDNS" style="font-size:11px;">🟡 DNS Tunnel Query</button>
+                <button class="btn-ctrl" id="btnBytePresetMirai" style="font-size:11px;">🟠 Mirai Telnet Shell</button>
+              </div>
+
+              <div style="display:flex; gap:12px; align-items:center; margin-bottom:18px;">
+                <button class="btn-ctrl btn-ctrl-primary" id="btnInspectBytes">⚡ Normalize & Classify Payload</button>
+                <span id="byteInspectStatus" style="font-size:12px; color:var(--text-muted);">Ready to process 1,024-byte input signal</span>
+              </div>
+
+              <!-- Waveform Canvas -->
+              <div style="background:var(--bg-subtle); border:1px solid var(--border-main); border-radius:var(--radius-sm); padding:14px; margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-size:12px; font-weight:700;">1,024-Byte Normalized Input Waveform (uint8 / 255)</span>
+                  <span style="font-size:11px; color:var(--text-muted);" id="waveformMeta">64 original bytes · 960 zero-padded · Shape (1, 1, 1024)</span>
+                </div>
+                <div style="height:140px; position:relative;">
+                  <canvas id="payloadWaveformChart"></canvas>
+                </div>
+              </div>
+
+              <!-- PyTorch Classification & SHAP Output -->
+              <div id="bytePredictionCard" style="display:none; background:#ffffff; border:1px solid var(--border-main); border-radius:var(--radius-sm); padding:14px;">
+                <!-- Filled dynamically by app.js -->
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- =================================================================== -->
+          <!-- SUB-MODE C: OFFLINE PCAP / CSV UPLOAD                               -->
+          <!-- =================================================================== -->
+          <div id="submode-file" class="submode-pane">
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Batch Capture & Dataset Ingestion</h3>
+                  <div class="panel-subtitle">Upload network captures (.pcap, .pcapng) or feature tables (.csv) for batch inference</div>
+                </div>
+              </div>
+
+              <div class="upload-dropzone" id="uploadDropzone">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--primary-blue); margin-bottom:10px;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <div style="font-weight:700; font-size:14px; color:var(--text-main); margin-bottom:4px;">Drag and drop your network capture file here</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Supports .pcap, .pcapng, .cap, or NetFlow .csv (up to 50 MB)</div>
+                <label class="btn-ctrl btn-ctrl-primary" style="display:inline-block; cursor:pointer;">
+                  Browse Files
+                  <input type="file" id="fileUploadInput" accept=".pcap,.pcapng,.cap,.csv" style="display:none;">
+                </label>
+              </div>
+
+              <div id="uploadProgressBox" style="display:none; margin-top:16px; background:var(--bg-subtle); border:1px solid var(--border-main); border-radius:var(--radius-sm); padding:14px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:12.5px; font-weight:600;">
+                  <span id="uploadFileName">capture_session.pcap</span>
+                  <span id="uploadPercent">100% Processed</span>
+                </div>
+                <div class="meter-bar-track" style="margin-bottom:10px;">
+                  <div class="meter-bar-fill" style="width:100%; background:var(--primary-blue);"></div>
+                </div>
+                <div style="font-size:12px; color:var(--text-secondary);" id="uploadSummaryText">
+                  ✓ Analyzed 500 packets: <strong>488 Attacks</strong>, <strong>12 Benign</strong> · Mean Latency: 0.012 ms
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 3: MODEL PERFORMANCE & BENCHMARK STUDIO                           -->
+        <!-- ===================================================================== -->
+        <section id="tab-models" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">RESEARCH BENCHMARKS & EVALUATION</div>
+              <h1 class="overview-title">Model performance studio.</h1>
+              <p class="overview-desc">Comparative evaluation of all 5 machine learning and deep learning models evaluated on the CICIoT2023 1.17M held-out test dataset.</p>
+            </div>
+          </div>
+
+          <!-- 5-Model Comparative Cards Grid -->
+          <div class="benchmarks-grid-5">
+            
+            <!-- Model 1: Hybrid 1D-CNN + BiLSTM -->
+            <div class="benchmark-card highlight">
+              <div class="model-badge-top">PRIMARY ENGINE</div>
+              <div class="model-name">Hybrid 1D-CNN + BiLSTM</div>
+              <div class="model-type-tag">Deep Neural Payload & Flow Engine</div>
+              <p class="model-summary-desc">Combines Conv1D spatial filters (capturing local byte n-grams) with bidirectional LSTM (capturing sequential flow dependencies).</p>
+              
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>86.68% (99.24% top-k)</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>89.12%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>86.45%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro F1-Score:</span>
+                <strong>87.76%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Inference Latency:</span>
+                <strong>0.0125 ms / flow</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Parameters & Size:</span>
+                <span>77,026 · 0.94 MB</span>
+              </div>
+            </div>
+
+            <!-- Model 2: XGBoost Champion -->
+            <div class="benchmark-card highlight-green">
+              <div class="model-badge-top" style="background:#dcfce7; color:#166534; border-color:#86efac;">TABULAR CHAMPION</div>
+              <div class="model-name">XGBoost Ensemble</div>
+              <div class="model-type-tag">Gradient Boosted Decision Trees</div>
+              <p class="model-summary-desc">State-of-the-art classifier for tabular NetFlow statistics. Highly optimized histogram tree-splitting on 46 flow features.</p>
+              
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong style="color:var(--accent-green);">99.24%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>99.39%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>99.24%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro F1-Score:</span>
+                <strong>99.30%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Inference Latency:</span>
+                <strong>0.0041 ms / flow</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Model Size:</span>
+                <span>100 Trees · 7.36 MB</span>
+              </div>
+            </div>
+
+            <!-- Model 3: Random Forest -->
+            <div class="benchmark-card">
+              <div class="model-name">Random Forest</div>
+              <div class="model-type-tag">Bagged Ensemble Baseline</div>
+              <p class="model-summary-desc">Bootstrap aggregating decision tree forest providing robust non-linear boundaries across multi-class distributions.</p>
+              
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>99.11%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>99.27%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>99.11%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro F1-Score:</span>
+                <strong>99.17%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Inference Latency:</span>
+                <strong>0.0113 ms / flow</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Model Size:</span>
+                <span>200 Trees · 1,568 MB</span>
+              </div>
+            </div>
+
+            <!-- Model 4: 1D-CNN Baseline -->
+            <div class="benchmark-card">
+              <div class="model-name">1D-CNN Baseline</div>
+              <div class="model-type-tag">Spatial Convolution Only</div>
+              <p class="model-summary-desc">Isolates spatial feature extraction without recurrent sequence memory to benchmark local n-gram detection performance.</p>
+              
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>84.15%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>85.40%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>83.90%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro F1-Score:</span>
+                <strong>84.64%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Inference Latency:</span>
+                <strong>0.0094 ms / flow</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Parameters & Size:</span>
+                <span>46,626 · 0.59 MB</span>
+              </div>
+            </div>
+
+            <!-- Model 5: BiLSTM Baseline -->
+            <div class="benchmark-card">
+              <div class="model-name">BiLSTM Baseline</div>
+              <div class="model-type-tag">Temporal Recurrent Only</div>
+              <p class="model-summary-desc">Tests purely recurrent forward and backward hidden states to measure sequential correlation across raw feature steps.</p>
+              
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Accuracy:</span>
+                <strong>85.02%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Precision:</span>
+                <strong>86.10%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro Recall:</span>
+                <strong>84.80%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Macro F1-Score:</span>
+                <strong>85.44%</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Inference Latency:</span>
+                <strong>0.0182 ms / flow</strong>
+              </div>
+              <div class="metric-stat-row">
+                <span style="color:var(--text-muted)">Parameters & Size:</span>
+                <span>81,378 · 1.00 MB</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Comparative Charts Row (Bar Chart & Radar Chart) -->
+          <div class="charts-grid-2" style="margin-top:20px;">
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Multi-Model Performance Metrics</h3>
+                  <div class="panel-subtitle">Accuracy, Precision, Recall, and F1-Score across all 5 architectures</div>
+                </div>
+              </div>
+              <div style="height:260px; position:relative;">
+                <canvas id="modelBarChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Multi-Dimensional Trade-off Radar</h3>
+                  <div class="panel-subtitle">Speed, Memory, Complexity, Generalization & Top-k Accuracy</div>
+                </div>
+              </div>
+              <div style="height:260px; position:relative;">
+                <canvas id="modelRadarChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Deployment Strategy Guide Matrix -->
+          <div class="card-panel" style="margin-top:20px;">
+            <div class="card-panel-header">
+              <div>
+                <h3 class="panel-title">SOC Deployment Strategy & Architectural Trade-offs</h3>
+                <div class="panel-subtitle">When to deploy Tabular Gradient Boosting vs Deep Neural Payload Inspection</div>
+              </div>
+            </div>
+
+            <div class="deployment-grid-3">
+              <div class="deploy-card">
+                <div class="deploy-badge" style="background:#eff6ff; color:#1d4ed8;">Tier 1: Edge / Gateway Filter</div>
+                <div class="deploy-title">XGBoost & Random Forest</div>
+                <p class="deploy-desc">Deploys at perimeter firewalls and wire-speed gateways. Ingests statistical flow headers to filter out 99.2% of high-volume volumetric floods in sub-0.005 ms.</p>
+                <div class="deploy-stats">• Best for: Volumetric DDoS, SYN Floods, PortScans</div>
+              </div>
+
+              <div class="deploy-card highlight-border">
+                <div class="deploy-badge" style="background:#f5f3ff; color:#6d28d9;">Tier 2: Deep SOC Packet Core</div>
+                <div class="deploy-title">Hybrid 1D-CNN + BiLSTM</div>
+                <p class="deploy-desc">Deploys in deep SOC inspection pools. Ingests raw 1,024-byte payloads to classify polymorphic exploits, Mirai botnet shellcodes, and application-layer injections.</p>
+                <div class="deploy-stats">• Best for: Payload inspection, Zero-day variations, SHAP XAI</div>
+              </div>
+
+              <div class="deploy-card">
+                <div class="deploy-badge" style="background:#f0fdf4; color:#15803d;">Tier 3: Audit & Forensic XAI</div>
+                <div class="deploy-title">SHAP Attribution Engine</div>
+                <p class="deploy-desc">Extracts byte-level and feature-level game-theoretic contributions, empowering Tier-3 analysts to verify incident root causes and generate audit reports.</p>
+                <div class="deploy-stats">• Best for: Compliance, Threat intelligence, Evidence verification</div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 4: ARCHITECTURE & METHODOLOGY (CLEAR EDUCATIONAL GUIDE)            -->
+        <!-- ===================================================================== -->
+        <section id="tab-architecture" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">END-TO-END METHODOLOGY & SYSTEM DESIGN</div>
+              <h1 class="overview-title">Architecture & AI pipeline.</h1>
+              <p class="overview-desc">A step-by-step breakdown of how Sentinel processes raw network packets into actionable intrusion intelligence.</p>
+            </div>
+          </div>
+
+          <!-- 6-Stage Interactive Pipeline Flowchart -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div>
+                <h3 class="panel-title">End-to-End 6-Stage AI Intrusion Pipeline</h3>
+                <div class="panel-subtitle">From raw wire capture to explainable game-theoretic attribution</div>
+              </div>
+            </div>
+
+            <div class="pipeline-flow-container">
+              
+              <!-- Stage 1 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">1</div>
+                <div class="step-content">
+                  <div class="step-title">Traffic Ingestion</div>
+                  <div class="step-sub">PCAP & NetFlow streams</div>
+                  <div class="step-detail">Bounded Scapy capture buffers packets from network interfaces or uploaded captures at line rate.</div>
+                </div>
+              </div>
+
+              <div class="pipeline-arrow">➔</div>
+
+              <!-- Stage 2 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">2</div>
+                <div class="step-content">
+                  <div class="step-title">Preprocessing</div>
+                  <div class="step-sub">Normalization & Framing</div>
+                  <div class="step-detail">Extracts 46 statistical features with MinMax scaling, or normalizes 1,024 payload bytes (uint8 / 255) with zero padding.</div>
+                </div>
+              </div>
+
+              <div class="pipeline-arrow">➔</div>
+
+              <!-- Stage 3 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">3</div>
+                <div class="step-content">
+                  <div class="step-title">Spatial 1D-CNN</div>
+                  <div class="step-sub">Local n-gram filters</div>
+                  <div class="step-detail">Applies 32/64 convolution channels with ReLU and MaxPooling to detect local byte patterns and protocol signatures.</div>
+                </div>
+              </div>
+
+              <div class="pipeline-arrow">➔</div>
+
+              <!-- Stage 4 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">4</div>
+                <div class="step-content">
+                  <div class="step-title">BiLSTM Recurrent</div>
+                  <div class="step-sub">Bidirectional sequence</div>
+                  <div class="step-detail">48 hidden units per direction capture long-range forward and backward temporal relationships across the flow.</div>
+                </div>
+              </div>
+
+              <div class="pipeline-arrow">➔</div>
+
+              <!-- Stage 5 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">5</div>
+                <div class="step-content">
+                  <div class="step-title">Softmax Classifier</div>
+                  <div class="step-sub">34-Class probability</div>
+                  <div class="step-detail">Dense output layer computes probability distribution across 33 attack classes plus Benign Traffic.</div>
+                </div>
+              </div>
+
+              <div class="pipeline-arrow">➔</div>
+
+              <!-- Stage 6 -->
+              <div class="pipeline-step-node">
+                <div class="step-circle">6</div>
+                <div class="step-content">
+                  <div class="step-title">SHAP Explainability</div>
+                  <div class="step-sub">XAI attribution</div>
+                  <div class="step-detail">Computes Shapley values identifying exactly which byte offsets or flow features triggered the intrusion decision.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Deep Dive Questions: Why Hybrid Architecture? -->
+          <div class="grid-2-panels" style="margin-top:20px;">
+            
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">Why 1D-CNN + BiLSTM Hybrid Architecture?</h3>
+                  <div class="panel-subtitle">The theoretical synergy of spatial and temporal deep learning</div>
+                </div>
+              </div>
+              <div class="article-text-block">
+                <p><strong>1. Spatial Feature Extraction (1D-CNN):</strong> Traditional machine learning relies strictly on engineered statistical summaries. The 1D-CNN scans raw packet bytes like an n-gram scanner, detecting contiguous header patterns (e.g., TCP flag combinations, payload magic bytes, shellcode headers) regardless of their specific offset.</p>
+                <p><strong>2. Bidirectional Temporal Memory (BiLSTM):</strong> Network flows possess chronological and structural dependencies. The BiLSTM processes the feature sequence in both forward and backward directions, recognizing protocol state progressions (such as TCP handshakes, payload entropy transitions, or request-response anomalies).</p>
+                <p><strong>3. Resilience to Polymorphic Attacks:</strong> By combining spatial convolutional filters with sequential memory, the model detects obfuscated or fragmented attacks that bypass simple signature matching.</p>
+              </div>
+            </div>
+
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <div>
+                  <h3 class="panel-title">CICIoT2023 Dataset Specifications</h3>
+                  <div class="panel-subtitle">State-of-the-art Internet-of-Things cybersecurity benchmark</div>
+                </div>
+              </div>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Total Network Flows:</span>
+                  <span class="spec-value">16.9 Million flows</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Extracted Features:</span>
+                  <span class="spec-value">46 NetFlow statistical & header features</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Evaluated Classes:</span>
+                  <span class="spec-value">34 (33 Attack Classes + 1 Benign Traffic)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Attack Threat Families:</span>
+                  <span class="spec-value">7 Families (DDoS, DoS, Mirai, Recon, Web, BruteForce, Spoofing)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Test Evaluation Pool:</span>
+                  <span class="spec-value">1,176,851 held-out test flows</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">IoT Device Testbed:</span>
+                  <span class="spec-value">105 Real IoT devices (Smart Cameras, Sensors, Hubs)</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- ===================================================================== -->
+        <!-- TAB 5: SHAP EXPLAINABILITY & THREAT TAXONOMY GLOSSARY                 -->
+        <!-- ===================================================================== -->
+        <section id="tab-shap-threats" class="tab-view">
+          
+          <div class="overview-header">
+            <div>
+              <div class="header-meta-tag">EXPLAINABLE AI & THREAT ENCYCLOPEDIA</div>
+              <h1 class="overview-title">SHAP & threat taxonomy.</h1>
+              <p class="overview-desc">Understand feature importance drivers via game-theoretic Shapley values and explore the complete 34-class attack dictionary.</p>
+            </div>
+          </div>
+
+          <!-- Global SHAP Feature Importance Section -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div>
+                <h3 class="panel-title">Global SHAP Feature Importance</h3>
+                <div class="panel-subtitle">Mean absolute Shapley value impact across 1.17M flow evaluations</div>
+              </div>
+              <div class="panel-badge-pill">Game-Theoretic XAI</div>
+            </div>
+
+            <div style="height:240px; position:relative; margin-bottom:14px;">
+              <canvas id="shapImportanceChart"></canvas>
+            </div>
+
+            <div class="feature-guide-grid">
+              <div class="feature-pill-card">
+                <div class="fpc-name">Header_Length</div>
+                <div class="fpc-desc">Measures packet header size; abnormal lengths strongly signal fragmentation and tunneling exploits.</div>
+              </div>
+              <div class="feature-pill-card">
+                <div class="fpc-name">Rate & Srate</div>
+                <div class="fpc-desc">Packet transmission velocity; sudden surges indicate volumetric DDoS/DoS flood floods.</div>
+              </div>
+              <div class="feature-pill-card">
+                <div class="fpc-name">SYN / ACK Counts</div>
+                <div class="fpc-desc">Disproportionate SYN-to-ACK ratios directly expose TCP SYN flood attacks and half-open scans.</div>
+              </div>
+              <div class="feature-pill-card">
+                <div class="fpc-name">Tot_size & AVG</div>
+                <div class="fpc-desc">Flow payload volume; payloadless packets expose ICMP/UDP scans, while oversized flows indicate exfiltration.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 34-Class Threat Dictionary & Taxonomy -->
+          <div class="card-panel" style="margin-top:20px;">
+            <div class="card-panel-header" style="flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 class="panel-title">CICIoT2023 34-Class Attack Taxonomy</h3>
+                <div class="panel-subtitle">Search and inspect all attack archetypes, mechanisms, and recommended remediation</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="threatSearchInput" class="text-input-field" style="width:240px;" placeholder="Search attack dictionary...">
+                <select id="threatFamilySelect" class="select-dropdown">
+                  <option value="all">All Threat Families</option>
+                  <option value="DDoS">DDoS Attacks (11 Types)</option>
+                  <option value="DoS">DoS Attacks (4 Types)</option>
+                  <option value="Mirai">Mirai Botnet (3 Types)</option>
+                  <option value="Recon">Reconnaissance (5 Types)</option>
+                  <option value="Web">Web Exploits (4 Types)</option>
+                  <option value="BruteForce">Brute Force & Malware (2 Types)</option>
+                  <option value="Spoofing">Spoofing & MITM (2 Types)</option>
+                  <option value="Benign">Benign Traffic (1 Type)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Quick Search Suggestion Pills -->
+            <div style="display:flex; gap:6px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:var(--text-muted);">Quick Search:</span>
+              <button class="btn-preset" style="padding:2px 8px; font-size:10.5px;" onclick="searchThreat('DDoS')">🔥 DDoS Floods</button>
+              <button class="btn-preset" style="padding:2px 8px; font-size:10.5px;" onclick="searchThreat('Mirai')">🤖 Mirai Botnet</button>
+              <button class="btn-preset" style="padding:2px 8px; font-size:10.5px;" onclick="searchThreat('PortScan')">🔍 PortScan</button>
+              <button class="btn-preset" style="padding:2px 8px; font-size:10.5px;" onclick="searchThreat('Sql')">💉 SQL Injection</button>
+              <button class="btn-preset" style="padding:2px 8px; font-size:10.5px;" onclick="searchThreat('Brute')">🔑 Brute Force</button>
+            </div>
+
+            <!-- Threat Dictionary Cards Grid -->
+            <div class="threat-cards-grid" id="threatCardsGrid">
+              <!-- Dynamically populated by app.js -->
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Interactive Quick Start / How to Use Guide Modal -->
+  <div class="modal-overlay" id="guideModal">
+    <div class="modal-card" style="width: 620px; max-height:85vh; overflow-y:auto;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;">📖</span>
+          <h3 class="modal-title">How to Use Sentinel ML-IDS</h3>
+        </div>
+        <button class="modal-close" id="btnCloseGuideModal">✕</button>
+      </div>
+
+      <div style="font-size:13px; color:var(--text-secondary); line-height:1.5; display:flex; flex-direction:column; gap:14px;">
+        <div class="guide-step-card">
+          <div class="gsc-num">1</div>
+          <div class="gsc-content">
+            <div class="gsc-title">Overview & Live Monitoring</div>
+            <div class="gsc-text">Watch incoming simulated network packets. Click <strong>▶ Start Stream</strong> to stream traffic or click <strong>Inspect</strong> on any row to see what the AI detected.</div>
+          </div>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="gsc-num">2</div>
+          <div class="gsc-content">
+            <div class="gsc-title">Custom Input Studio (Test Your Own Data!)</div>
+            <div class="gsc-text">Go to <strong>Custom Input Studio</strong>. Click any 1-Click Attack Preset (like <em>DDoS ICMP Flood</em> or <em>SQL Injection</em>) or adjust the sliders (Rate, Header Length, Protocol, TCP Flags), then click <strong>⚡ Classify Custom Flow</strong> to see the AI's instant verdict!</div>
+          </div>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="gsc-num">3</div>
+          <div class="gsc-content">
+            <div class="gsc-title">Compare the 5 Machine Learning & AI Models</div>
+            <div class="gsc-text">Open <strong>Model Benchmarks</strong> to see how <em>Hybrid 1D-CNN + BiLSTM</em>, <em>XGBoost</em>, <em>Random Forest</em>, <em>1D-CNN</em>, and <em>BiLSTM</em> perform in accuracy, speed, and memory.</div>
+          </div>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="gsc-num">4</div>
+          <div class="gsc-content">
+            <div class="gsc-title">Understand the 6-Stage AI Pipeline</div>
+            <div class="gsc-text">Visit <strong>Architecture & Pipeline</strong> to see a visual diagram explaining how raw internet packets turn into cyber attack detections in 0.012 milliseconds.</div>
+          </div>
+        </div>
+
+        <div class="guide-step-card">
+          <div class="gsc-num">5</div>
+          <div class="gsc-content">
+            <div class="gsc-title">Search the 34-Class Threat Dictionary</div>
+            <div class="gsc-text">Open <strong>SHAP & Threat Glossary</strong> to look up any cyberattack (e.g. Mirai botnet, SlowLoris, SYN floods) with simple descriptions and defense advice.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions" style="margin-top:16px;">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnGotItGuide">Got it! Let's explore</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Events Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Network Events</h3>
+        <button class="modal-close" id="btnCloseExportModal">✕</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">Export the current session's classified intrusion events with prediction confidence, severity tags, and metadata.</p>
+      
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnDownloadCSV" style="flex:1;">Download CSV</button>
+        <button class="btn-ctrl" id="btnDownloadJSON" style="flex:1;">Download JSON</button>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ctrl" id="btnCancelExport">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow Deep Inspection Modal -->
+  <div class="modal-overlay" id="inspectModal">
+    <div class="modal-card" style="width: 560px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Flow Intelligence Inspection</h3>
+        <button class="modal-close" id="btnCloseInspectModal">✕</button>
+      </div>
+      <div id="inspectModalContent" style="font-size:13px; color:var(--text-secondary);">
+        <!-- Populated dynamically by app.js -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnCloseInspectBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Walkthrough & Tutorial Modal -->
+  <div class="modal-overlay" id="videoGuideModal">
+    <div class="modal-card video-guide-modal-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:22px;">🎬</span>
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--primary-blue); text-transform:uppercase; letter-spacing:0.5px;">Interactive Video Walkthrough & User Guide</div>
+            <h3 class="modal-title">How Sentinel ML-IDS Works (Video Demo)</h3>
+          </div>
+        </div>
+        <button class="modal-close" id="btnCloseVideoGuideModal">✕</button>
+      </div>
+
+      <div class="video-modal-grid">
+        
+        <!-- Left: Video Player Box -->
+        <div class="video-player-container">
+          <div class="video-viewport">
+            <img src="guide_video.webp" id="guideVideoElement" alt="Sentinel ML-IDS Walkthrough Video Guide" class="guide-video-media">
+            
+            <div class="video-overlay-badge">
+              <span class="video-dot-live"></span>
+              <span>1080p Recorded System Walkthrough</span>
+            </div>
+          </div>
+
+          <!-- Video Controls Bar -->
+          <div class="video-controls-bar">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button class="btn-video-ctrl" id="btnVideoReplay" title="Restart / Replay Video">🔁 Replay Video</button>
+              <span class="video-duration-tag" id="videoTimelineText">Full SOC Tour & Interactive Testing</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-video-ctrl" id="btnVideoFullscreen" title="Open Fullscreen View">⛶ Fullscreen</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Chapters & Step-by-Step Guide -->
+        <div class="video-chapters-sidebar">
+          <div class="chapters-header">
+            <span>📑 Video Chapters & Fast-Travel</span>
+            <span style="font-size:11px; color:var(--text-muted);">Click to jump</span>
+          </div>
+
+          <div class="chapters-list">
+            <div class="chapter-item active" onclick="jumpToFeature('overview')">
+              <div class="ch-time">0:00</div>
+              <div class="ch-info">
+                <div class="ch-title">1. Security Overview & Live Feed</div>
+                <div class="ch-desc">Real-time packet triage, KPI counters, and donut breakdown.</div>
+              </div>
+            </div>
+
+            <div class="chapter-item" onclick="jumpToFeature('custom_studio')">
+              <div class="ch-time">0:25</div>
+              <div class="ch-info">
+                <div class="ch-title">2. Custom Input Studio (Sliders)</div>
+                <div class="ch-desc">1-click attack presets (DDoS, Mirai, SQLi) and custom parameters.</div>
+              </div>
+            </div>
+
+            <div class="chapter-item" onclick="jumpToFeature('byte_inspector')">
+              <div class="ch-time">0:50</div>
+              <div class="ch-info">
+                <div class="ch-title">3. Raw Byte & Hex Inspector</div>
+                <div class="ch-desc">1,024-byte waveform signal with PyTorch deep learning classification.</div>
+              </div>
+            </div>
+
+            <div class="chapter-item" onclick="jumpToFeature('models')">
+              <div class="ch-time">1:15</div>
+              <div class="ch-info">
+                <div class="ch-title">4. 5 AI Model Benchmarks</div>
+                <div class="ch-desc">Compare Hybrid 1D-CNN+BiLSTM, XGBoost, and Random Forest.</div>
+              </div>
+            </div>
+
+            <div class="chapter-item" onclick="jumpToFeature('architecture')">
+              <div class="ch-time">1:35</div>
+              <div class="ch-info">
+                <div class="ch-title">5. 6-Stage AI Methodology</div>
+                <div class="ch-desc">Flowchart from wire capture to 1D-CNN, BiLSTM, and Softmax.</div>
+              </div>
+            </div>
+
+            <div class="chapter-item" onclick="jumpToFeature('glossary')">
+              <div class="ch-time">1:55</div>
+              <div class="ch-info">
+                <div class="ch-title">6. 34-Class Threat Dictionary</div>
+                <div class="ch-desc">Search all 34 cyber threat classes with plain-English mitigations.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action in Video Modal -->
+          <div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center;">
+            <button class="btn-ctrl btn-ctrl-primary" id="btnTryInAppFromVideo" style="width:100%; font-weight:700;">🚀 Try It Live in the App</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive 4-Step Guided Tour Modal -->
+  <div class="modal-overlay" id="interactiveTourModal">
+    <div class="modal-card tour-modal-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;" id="tourStepEmoji">🎯</span>
+          <div>
+            <div style="font-size:11px; font-weight:700; color:var(--primary-blue); text-transform:uppercase; letter-spacing:0.5px;" id="tourStepIndicator">Step 1 of 4</div>
+            <h3 class="modal-title" id="tourStepTitle">Welcome to Sentinel ML-IDS!</h3>
+          </div>
+        </div>
+        <button class="modal-close" id="btnCloseTourModal">✕</button>
+      </div>
+
+      <div class="tour-body" id="tourStepBody">
+        <!-- Filled dynamically by app.js -->
+      </div>
+
+      <div class="tour-footer">
+        <button class="btn-ctrl" id="btnTourSkip" style="font-size:12px;">Skip Tour</button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-ctrl" id="btnTourPrev" style="font-size:12px;" disabled>Back</button>
+          <button class="btn-ctrl btn-ctrl-primary" id="btnTourNext" style="font-size:12px; font-weight:700;">Next Step ➔</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Metric Explainer Modal (Opens on KPI / Tooltip clicks) -->
+  <div class="modal-overlay" id="metricExplainerModal">
+    <div class="modal-card" style="width: 500px;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:20px;" id="metricIconEmoji">💡</span>
+          <h3 class="modal-title" id="metricExplainerTitle">Metric Details</h3>
+        </div>
+        <button class="modal-close" id="btnCloseMetricExplainer">✕</button>
+      </div>
+      <div id="metricExplainerBody" style="font-size:13px; color:var(--text-secondary); line-height:1.5;">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ctrl btn-ctrl-primary" id="btnCloseMetricExplainerBtn">Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -109,3 +109,4 @@ runtime/
 .streamlit/secrets.toml
 .vercel/
 output/delivery/*.npy
+.vercel

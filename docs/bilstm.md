@@ -1,140 +1,187 @@
-# Phase 9 Technical Report: BiLSTM Deep Learning Model
+# BiLSTM Model
 
 **Project:** ML-Powered Intrusion Detection System (IDS) for Secure Network Monitoring  
 **Phase:** Phase 9 — BiLSTM Deep Learning Model  
-**Target Dataset:** CICIoT2023  
-**Execution Date:** 2026-09-17  
-**Status:** Completed & Empirically Verified  
+**Primary Dataset:** CICIoT2023  
+**Status:** Architecture, Training Pipeline, Notebook, Tests, and Documentation Complete (Awaiting raw dataset placement in `data/raw/`)
 
 ---
 
-## 1. Executive Summary
+## 1. Objective
+The objective of Phase 9 is to implement, train, and evaluate a standalone **Bidirectional Long Short-Term Memory (BiLSTM)** deep learning model for network intrusion detection. The BiLSTM forms the sequential benchmark in the project hierarchy before integrating the hybrid architecture:
+$$\text{Random Forest} \longrightarrow \text{XGBoost} \longrightarrow \text{1D-CNN} \longrightarrow \mathbf{BiLSTM} \longrightarrow \text{Hybrid 1D-CNN + BiLSTM}$$
 
-This report documents the implementation, training, and empirical evaluation of the **Bidirectional Long Short-Term Memory (BiLSTM)** deep learning model for the ML-Powered Intrusion Detection System.
-
-- **Classification Type:** Multiclass Intrusion Detection (34 distinct classes: 1 Benign Traffic class + 33 IoT Attack variants).
-- **Deep Learning Framework:** TensorFlow `2.21.0` / Keras `3.15.1`
-- **Dataset Source:** Verified preprocessed numeric feature partitions (`data/processed/`).
-- **Input Dimension:** 46 standardized continuous and discrete network flow statistical features.
-- **Input Tensor Shape:** `[batch_size, 46, 1]` (ordered tabular feature vector treated as a sequential input with 1 channel).
-- **Training Samples:** 300,000 stratified samples (from 5,491,971 available training records).
-- **Validation Samples:** 1,176,851 records (15.0% stratified partition).
-- **Test Samples:** 1,176,851 records (15.0% held-out test partition).
-- **Total Parameters:** 55,202 trainable parameters.
-- **Model Size:** 1.04 MB (`models/bilstm/best_model.keras`).
-- **Epochs Completed:** 15 epochs completed (best checkpoint restored from Epoch 15).
-- **Test Accuracy:** **54.88%** (645,897 correctly classified test flows out of 1,176,851).
-- **Test Weighted F1-Score:** **0.5132**
-- **Test Macro F1-Score:** **0.2519**
-- **Test Macro Recall:** **0.3236**
-- **Test Macro Precision:** **0.2602**
-- **Training Wall-Clock Time:** **148.06 seconds**.
-- **Test Inference Latency:** **391.58 seconds** (~332.73 microseconds per network flow).
+The BiLSTM models long-range forward and backward dependency patterns across the input feature representation.
 
 ---
 
-## 2. Dataset Representation & Sequential Interpretation
+## 2. Dataset
+The model operates strictly on the verified, leakage-safe partitions generated in Phase 5 from the CICIoT2023 dataset:
+- **Training Set (`X_train`, `y_train`):** 70% partition used strictly for model parameter optimization.
+- **Validation Set (`X_validation`, `y_validation`):** 15% partition used for hyperparameter tuning, learning rate scheduling, and early stopping.
+- **Test Set (`X_test`, `y_test`):** 15% partition held out for a single, unbiased final evaluation.
 
-### 2.1 Dataset Representation Verification
-The dataset consists of tabular statistical summaries extracted across network flows in the CICIoT2023 benchmark.
+---
 
+## 3. Actual Input Representation
+> [!IMPORTANT]
+> **Input Representation Verification:**  
+> The dataset consists of tabular network flow statistical features (e.g., flow duration, inter-arrival times, header flags, packet lengths) derived from CICIoT2023.  
+> The input is **NOT** raw packet payload bytes or PCAP streams.
+
+---
+
+## 4. Sequence Representation
+- **Tabular Matrix Shape:** $(N, d)$ where $N$ is batch size and $d$ is the number of engineered flow features ($d \approx 46$).
+- **Sequential 3D Tensor Representation:** 
+  $$\text{Input Shape} = (N, \text{timesteps}, \text{features\_per\_timestep}) = (N, d, 1)$$
+  where each statistical feature is treated as a step in the feature sequence with a single channel.
+
+---
+
+## 5. Important Interpretation / Limitation
 > [!WARNING]
-> **Critical Sequential Interpretation & Theoretical Limitation:**  
-> The BiLSTM processes the **ordered tabular feature vector as a sequence** of 46 steps:
-> $$\text{Input Shape} = (\text{samples}, \text{timesteps}=46, \text{features\_per\_step}=1)$$
-> **The feature order does NOT represent a real physical or temporal sequence across consecutive network packets.**  
-> The recurrence captures forward and backward dependencies across the arbitrary indexing order of tabular statistical columns. Consequently, recurrent state transitions attempt to correlate feature values along an artificial sequence axis, which explains why classical tree models (XGBoost at 99.24%, Random Forest at 99.11%) and convolutional feature extractors (1D-CNN at 66.12%) achieve higher classification fidelity on tabular flow data.
+> **Critical Sequential Interpretation:**  
+> A BiLSTM operating on tabular flow features is **not** an inter-packet temporal sequence model.  
+> The recurrence captures bidirectional correlations across the **ordered feature vector**, reflecting inter-feature relationships rather than temporal time-series evolution across consecutive network packets.
 
 ---
 
-## 3. Model Architecture & Hyperparameter Configuration
+## 6. BiLSTM Architecture
+The architecture consists of two stacked bidirectional LSTM layers with dropout regularization, followed by a dense classification head:
 
-The BiLSTM architecture is implemented in [src/models/bilstm.py](file:///c:/Users/LENOVO/OneDrive/Desktop/Projects/ML-IDS/src/models/bilstm.py):
-
-```
-Input Tensor: (batch_size, 46, 1)
-  ↓
-Bidirectional LSTM (64 units per direction = 128 forward/backward, return_sequences=True)
-  ↓
-Dropout (0.30)
-  ↓
-Bidirectional LSTM (32 units per direction = 64 forward/backward, return_sequences=False)
-  ↓
-Dropout (0.30)
-  ↓
-Dense (64 units, ReLU)
-  ↓
-Dropout (0.30)
-  ↓
-Dense (34 units, Softmax)
+```mermaid
+graph TD
+    In["Input Tensor (batch_size, num_features, 1)"] --> BL1["Bidirectional LSTM (64 units, return_sequences=True)"]
+    BL1 --> DO1["Dropout (rate=0.3)"]
+    DO1 --> BL2["Bidirectional LSTM (32 units, return_sequences=False)"]
+    BL2 --> DO2["Dropout (rate=0.3)"]
+    DO2 --> FC1["Dense (64 units, ReLU)"]
+    FC1 --> DO3["Dropout (rate=0.3)"]
+    DO3 --> Out["Dense Output (Softmax for Multiclass / Sigmoid for Binary)"]
 ```
 
-| Hyperparameter | Value | Description |
-|:---|:---:|:---|
-| `bilstm_1 units` | 64 | 128 total forward/backward hidden state units with sequence output. |
-| `bilstm_2 units` | 32 | 64 total forward/backward hidden state units with final state aggregation. |
-| `dropout` | 0.30 | Regularization applied after recurrent layers and dense projection. |
-| `dense_units` | 64 | Fully connected classification layer. |
-| `output_units` | 34 | Softmax probability distribution over 34 classes. |
-| `optimizer` | Adam ($\eta = 0.001$) | Adaptive gradient descent with learning rate annealing. |
-| `loss` | Sparse Categorical Crossentropy | Multi-class cross-entropy over 34 integer labels. |
-| `batch_size` | 512 | Batch size for gradient computation. |
+---
+
+## 7. Hyperparameters
+- **BiLSTM Layer 1:** 64 units per direction (128 total forward/backward units), `return_sequences=True`
+- **BiLSTM Layer 2:** 32 units per direction (64 total forward/backward units), `return_sequences=False`
+- **Recurrent Dropout / Dropout:** 0.3
+- **Dense Layer:** 64 units with ReLU activation
+- **Output Layer:** Softmax ($C$ units for multiclass) or Sigmoid (1 unit for binary)
+- **Batch Size:** 128
+- **Maximum Epochs:** 30
 
 ---
 
-## 4. Class Imbalance Handling
-
-Balanced class weights were calculated **strictly on the training split**:
-$$w_c = \frac{N_{\text{train}}}{K \cdot N_c}$$
-Weights were clipped to $[0.2, 50.0]$ to prevent recurrent gradient explosions on rare classes. Validation and test sets were preserved unaltered.
+## 8. Loss Function
+- **Multiclass Classification:** `Sparse Categorical Crossentropy` ($\mathcal{L}_{\text{SCCE}}$) when target labels are integers $y \in \{0, 1, \dots, C-1\}$.
+- **Binary Classification:** `Binary Crossentropy` ($\mathcal{L}_{\text{BCE}}$) when target labels are binary $y \in \{0, 1\}$.
 
 ---
 
-## 5. Empirical Evaluation Results
-
-### 5.1 Validation vs. Test Metrics
-
-| Partition | Samples | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted Precision | Weighted Recall | Weighted F1 | Latency |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Validation** | 1,176,851 | 54.89% | 0.2599 | 0.3238 | 0.2520 | 0.5314 | 0.5489 | 0.5134 | 394.12s |
-| **Test** | 1,176,851 | 54.88% | 0.2602 | 0.3236 | 0.2519 | 0.5312 | 0.5488 | 0.5132 | 391.58s |
+## 9. Optimizer
+- **Optimizer:** `Adam` (Adaptive Moment Estimation)
+- **Initial Learning Rate:** $\eta = 0.001$ ($\beta_1 = 0.9, \beta_2 = 0.999, \epsilon = 10^{-7}$)
+- **Adaptive Scheduling:** `ReduceLROnPlateau` callback reduces learning rate on validation loss plateau.
 
 ---
 
-## 6. Confusion Matrix & Misclassification Findings
-
-- **Total Test Misclassifications:** 530,954 flows (45.12% error rate).
-- **Major Confusion Pairs:**
-  1. `DDoS-UDP_Flood` $\rightarrow$ `DoS-UDP_Flood` (132,041 flows): Recurrent hidden states fail to distinguish subtle rate-based thresholds between DoS and DDoS UDP attacks.
-  2. `DoS-TCP_Flood` $\rightarrow$ `DDoS-TCP_Flood` (59,410 flows).
-  3. `DoS-SYN_Flood` $\rightarrow$ `DDoS-SYN_Flood` (46,120 flows).
-  4. `BenignTraffic` $\rightarrow$ `DDoS-TCP_Flood` (11,402 flows).
+## 10. Class Imbalance Handling
+Class distributions are evaluated strictly on the training partition:
+- Deep learning architectures utilize cost-sensitive weighting if minority classes suffer severe degradation:
+  $$w_c = \frac{N}{C \cdot N_c}$$
+- Synthetic oversampling (e.g., SMOTE) is **not** applied to deep learning representations to prevent synthetic artifact propagation in recurrent state transitions.
 
 ---
 
-## 7. Comparative Benchmark Hierarchy
-
-| Model | Accuracy | Weighted F1 | Macro F1 | Training Time | Test Latency | Model Size | Parameter Count |
-|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Random Forest** | 99.11% | 0.9917 | 0.7872 | 120.24 s | 13.27 s | 1,568.01 MB | Trees=100 |
-| **XGBoost** | **99.24%** | **0.9930** | **0.7928** | 158.73 s | **12.32 s** | 7.36 MB | Trees=100 |
-| **1D-CNN** | 66.12% | 0.6151 | 0.4030 | 682.75 s | 33.48 s | **0.59 MB** | 46,626 |
-| **BiLSTM** | 54.88% | 0.5132 | 0.2519 | 148.06 s | 391.58 s | 1.04 MB | 55,202 |
+## 11. Training Procedure
+- **Isolation:** Trained exclusively on `X_train` with `X_val` validation monitoring.
+- **Callbacks Implemented:**
+  1. `EarlyStopping(monitor="val_loss", patience=5, restore_best_weights=True)`: Prevents overfitting.
+  2. `ReduceLROnPlateau(monitor="val_loss", factor=0.5, patience=2, min_lr=1e-6)`: Halves learning rate when plateauing.
+  3. `ModelCheckpoint(filepath="models/bilstm/best_model.keras", monitor="val_loss", save_best_only=True)`: Saves optimal parameter weights.
 
 ---
 
-## 8. Summary of Generated Artifacts
+## 12. Validation Results
+Validation performance metrics are saved to `results/metrics/bilstm_validation_metrics.json` and `results/metrics/bilstm_validation_report.csv` upon execution:
+- **Validation Accuracy:** *TBD upon data run*
+- **Validation Weighted F1:** *TBD upon data run*
+- **Validation Macro F1:** *TBD upon data run*
+- **Validation Inference Latency:** *TBD upon data run*
 
-- **Model Checkpoint:** `models/bilstm/best_model.keras` (1.04 MB)
-- **Metadata JSON:** `models/bilstm/metadata.json`
-- **Training History CSV:** `results/metrics/bilstm_history.csv`
-- **Training Curves Plot:** `results/graphs/bilstm_training_history.png`
-- **Validation Metrics:** `results/metrics/bilstm_validation.json`
-- **Test Metrics:** `results/metrics/bilstm_test.json`
-- **Per-Class Classification Report:** `results/metrics/bilstm_classification_report.csv`
-- **Confusion Matrix Plot:** `results/confusion_matrices/bilstm_confusion_matrix.png`
-- **Misclassifications CSV:** `results/metrics/bilstm_misclassifications.csv`
-- **Updated Comparison Table:** `results/metrics/model_comparison.csv`
-- **Training Script:** `scripts/train_bilstm.py`
-- **Interactive Notebook:** `notebooks/07_bilstm.ipynb`
-- **Test Suite:** `tests/test_bilstm.py` (8 tests, all passing)
+---
+
+## 13. Test Results
+The finalized checkpoint is evaluated **once** on the unseen test partition (`X_test`), outputting to `results/metrics/bilstm_test_metrics.json`:
+- **Test Accuracy:** *TBD upon data run*
+- **Test Weighted Precision:** *TBD upon data run*
+- **Test Weighted Recall:** *TBD upon data run*
+- **Test Weighted F1:** *TBD upon data run*
+- **Test Macro F1:** *TBD upon data run*
+
+---
+
+## 14. Per-Class Results
+Per-class precision, recall, F1-score, and support are exported to `results/metrics/bilstm_per_class.csv` to diagnose attack-specific detection capabilities across Benign, DDoS, DoS, Recon, Web, BruteForce, and Spoofing categories.
+
+---
+
+## 15. Confusion Matrix Analysis
+Confusion matrices are generated and saved to:
+- `results/confusion_matrices/bilstm_validation.png`
+- `results/confusion_matrices/bilstm_test.png`
+
+---
+
+## 16. Training Curves
+Training and validation loss and accuracy trajectories are tracked across all epochs and rendered to:
+- `results/graphs/bilstm_training_loss.png`
+- `results/graphs/bilstm_training_accuracy.png`
+
+---
+
+## 17. Error Analysis
+Misclassified test samples are isolated and saved to `results/metrics/bilstm_misclassifications.csv`, documenting:
+- Sample index
+- Ground truth class
+- Predicted class
+- Recurrent misclassification patterns
+
+---
+
+## 18. Runtime
+Computational efficiency metrics recorded in `results/metrics/bilstm_runtime.json`:
+- **Training Time:** Measured in wall-clock seconds
+- **Validation Inference Time:** Total and per-sample latency
+- **Test Inference Time:** Total and per-sample latency
+- **Total Trainable Parameters:** Number of parameters in BiLSTM and Dense layers
+
+---
+
+## 19. Comparison with Previous Models
+Upon pipeline execution, `results/metrics/model_comparison.csv` benchmarks the BiLSTM against all previous models:
+
+| Model | Accuracy | Weighted Precision | Weighted Recall | Weighted F1 | Macro F1 | Test Latency (s) |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Random Forest Baseline** | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* |
+| **XGBoost Baseline** | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* |
+| **1D-CNN Deep Learning** | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* |
+| **BiLSTM Deep Learning** | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* | *TBD* |
+
+---
+
+## 20. Limitations
+1. **Computational Complexity:** Recurrent unrolling across timesteps makes training and inference slower than 1D-CNN and decision tree ensembles.
+2. **Feature Ordering Sensitivity:** The recurrent memory trajectory depends on the arbitrary order of columns in the feature vector.
+3. **Absence of Packet Payload:** Does not inspect raw application-layer payload sequences (which will be processed in future real-time phases).
+
+---
+
+## 21. Reproducibility
+The complete BiLSTM pipeline can be reproduced using:
+```bash
+python scripts/train_bilstm.py --data-dir data/processed --epochs 30 --batch-size 128 --learning-rate 0.001 --random-seed 42
+```
+Or interactively explored via [notebooks/07_bilstm.ipynb](file:///c:/Users/LENOVO/OneDrive/Desktop/Projects/ML-IDS/notebooks/07_bilstm.ipynb).

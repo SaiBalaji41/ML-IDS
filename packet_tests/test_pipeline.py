@@ -41,7 +41,7 @@ def test_hex_validation():
 def test_capture_payload_extraction():
     from scapy.all import Ether, IP, IPv6, UDP, TCP, Raw, DNS, DNSQR, Padding
     dns = DNS(id=321, qd=DNSQR(qname='example.test'))
-    packet = Ether(bytes(Ether()/IP()/UDP(sport=12000, dport=53)/dns))
+    packet = Ether(bytes(Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP(src='192.168.1.1', dst='10.0.0.1')/UDP(sport=12000, dport=53)/dns))
     assert extract_payload(packet) == bytes(dns)  # DNS has no Raw layer.
     assert extract_payload(IP()/TCP()) == b''
     assert extract_payload(IP(flags='MF')/UDP()/Raw(b'fragment')) == b''

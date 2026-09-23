@@ -20,10 +20,10 @@ def make_captures(directory, duplicate=False):
                 # Unique visible bytes for each capture; classes have distinct
                 # fixture patterns. This is NOT real CICIoT2023 traffic.
                 payload = bytes([30 + label_index * 180]) * 64 + bytes([split_index, index, label_index])
-                packets.append(Ether()/IP(id=split_index * 100 + index)/UDP(sport=2000, dport=3000)/Raw(payload))
+                packets.append(Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP(id=split_index * 100 + index)/UDP(sport=2000, dport=3000)/Raw(payload))
             if duplicate and split != 'train':
                 payload = bytes([30 + label_index * 180]) * 64 + bytes([0, 0, label_index])
-                packets.append(Ether()/IP()/UDP(sport=2000, dport=3000)/Raw(payload))
+                packets.append(Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP()/UDP(sport=2000, dport=3000)/Raw(payload))
             wrpcap(str(directory / name), packets)
             rows.append({'path': name, 'label': label, 'split': split,
                          'capture_id': f'{split}-{label_index}', 'dataset': 'CICIoT2023'})

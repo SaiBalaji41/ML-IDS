@@ -8,7 +8,7 @@ from src.preprocessing.packet_bytes import payload_to_array,parse_hex
 from src.realtime.engine import IDSEngine
 from src.realtime.capture import CaptureService
 from scripts.stream_ids import process_message
-from scripts.train_packet_bytes import load_manifest
+from scripts.train_packet_bytes_legacy import load_manifest
 from dashboard import server
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -67,9 +67,15 @@ def test_kafka_schema_routing(engine,tmp_path):
 
 def make_handler(path,method='GET',data=None,headers=None):
     handler=object.__new__(server.DashboardRequestHandler)
-    handler.path=path;handler.headers=headers or {};handler.result=None
+    handler.path=path;handler.command=method;handler.requestline=f'{method} {path} HTTP/1.1'
+    handler.headers=headers or {};handler.result=None
+    handler.wfile=io.BytesIO()
     handler.send_json=lambda value,status=200:setattr(handler,'result',(status,value))
     handler.send_bytes=lambda value,content_type,status=200,**kw:setattr(handler,'result',(status,value))
+    handler.send_response=lambda code,message=None:setattr(handler,'result',(code,message))
+    handler.send_header=lambda k,v:None
+    handler.end_headers=lambda:None
+    handler.log_message=lambda *args:None
     if data is not None:
         raw=json.dumps(data).encode();handler.rfile=io.BytesIO(raw);handler.headers['Content-Length']=str(len(raw))
     return handler
@@ -98,7 +104,7 @@ def test_csv_validation_and_batch_prediction(engine,monkeypatch):
 
 def test_manifest_duplicate_capture_rejected(tmp_path):
     from scapy.all import Ether,IP,UDP,Raw,wrpcap
-    wrpcap(str(tmp_path/'a.pcap'),[Ether()/IP()/UDP()/Raw(b'hello')])
+    wrpcap(str(tmp_path/'a.pcap'),[Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP(src='1.1.1.1', dst='2.2.2.2')/UDP()/Raw(b'hello')])
     (tmp_path/'manifest.csv').write_text('path,label,split\na.pcap,BenignTraffic,train\na.pcap,Attack,test\n')
     with pytest.raises(ValueError,match='Duplicate capture'):load_manifest(tmp_path/'manifest.csv')
 

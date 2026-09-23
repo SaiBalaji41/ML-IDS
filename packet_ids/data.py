@@ -75,8 +75,8 @@ def prepare_dataset(manifest, output_dir, max_packets_per_capture=10000, seed=42
     Labels are supplied by verified capture provenance. A mixed-label capture
     must be labeled/separated first. Model-identical payloads in multiple splits
     are removed from later splits. Contradictory labels within a split are
-    removed there, without using validation/test labels to select training data.
     """
+    import scapy.layers.l2  # Register Ethernet dissectors for linktype 1
     from scapy.utils import PcapReader
     if max_packets_per_capture < 1:
         raise ValueError('Packet sample limit must be positive.')

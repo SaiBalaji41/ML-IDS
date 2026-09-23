@@ -11,7 +11,7 @@ from streamlit_app.monitoring import event_rows
 
 def test_real_metadata_unknown_truth_and_model_predictions(trained_fixture):
     engine = PacketIDS(trained_fixture[0], allow_test_fixture=True)
-    packet = Ether()/IP(src='192.0.2.5', dst='198.51.100.9')/TCP(sport=4242, dport=443)/Raw(b'payload bytes')
+    packet = Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP(src='192.0.2.5', dst='198.51.100.9')/TCP(sport=4242, dport=443)/Raw(b'payload bytes')
     packet.time = 1234567890
     event = packet_event(packet, engine, 'test-packet')
     assert event['source_ip'] == '192.0.2.5' and event['destination_ip'] == '198.51.100.9'
@@ -38,7 +38,7 @@ def test_unscored_packets_and_policy_are_not_fabricated():
 def test_capture_worker_roundtrip_uses_actual_scapy_offline_reader(tmp_path, monkeypatch, trained_fixture):
     import scapy.all
     capture = tmp_path / 'fixture.pcap'
-    packets = [Ether()/IP(src='192.0.2.8', dst='198.51.100.2')/UDP(sport=50, dport=60)/Raw(bytes([i+1])*32) for i in range(8)]
+    packets = [Ether(src='00:11:22:33:44:55', dst='66:77:88:99:aa:bb')/IP(src='192.0.2.8', dst='198.51.100.2')/UDP(sport=50, dport=60)/Raw(bytes([i+1])*32) for i in range(8)]
     wrpcap(str(capture), packets)
     actual_sniffer = scapy.all.AsyncSniffer
     def offline_sniffer(**kwargs):
