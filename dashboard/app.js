@@ -1704,8 +1704,10 @@ function initVideoGuideModal() {
   const btnClose = document.getElementById('btnCloseVideoGuideModal');
   const btnReplay = document.getElementById('btnVideoReplay');
   const btnFullscreen = document.getElementById('btnVideoFullscreen');
+  const btnExitFullscreen = document.getElementById('btnExitFullscreen');
   const btnTryLive = document.getElementById('btnTryInAppFromVideo');
   const videoMedia = document.getElementById('guideVideoElement');
+  const playerContainer = document.getElementById('videoPlayerContainer');
 
   if (btnSidebarVideo) btnSidebarVideo.addEventListener('click', openVideoGuideModal);
   if (btnTopVideo) btnTopVideo.addEventListener('click', openVideoGuideModal);
@@ -1724,21 +1726,77 @@ function initVideoGuideModal() {
     });
   }
 
-  if (btnFullscreen && videoMedia) {
-    btnFullscreen.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        if (videoMedia.requestFullscreen) {
-          videoMedia.requestFullscreen();
-        } else if (videoMedia.webkitRequestFullscreen) {
-          videoMedia.webkitRequestFullscreen();
-        }
+  function toggleFullscreen() {
+    const container = playerContainer || videoMedia;
+    if (!container) return;
+
+    const isCurrentlyFullscreen = document.fullscreenElement || 
+                                  document.webkitFullscreenElement || 
+                                  document.mozFullScreenElement || 
+                                  document.msFullscreenElement ||
+                                  container.classList.contains('is-fullscreen');
+
+    if (!isCurrentlyFullscreen) {
+      // Try standard Fullscreen API on the complete container
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(() => container.classList.add('is-fullscreen'));
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      } else if (container.mozRequestFullScreen) {
+        container.mozRequestFullScreen();
+      } else if (container.msRequestFullscreen) {
+        container.msRequestFullscreen();
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
+        // Fallback for iOS/mobile iframes
+        container.classList.add('is-fullscreen');
       }
-    });
+      if (btnFullscreen) btnFullscreen.innerHTML = '✕ Exit Fullscreen';
+      showToast('⛶ Fullscreen Active', 'Press Esc or click Exit Fullscreen anytime.', 'info');
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+      if (container) container.classList.remove('is-fullscreen');
+      if (btnFullscreen) btnFullscreen.innerHTML = '⛶ Fullscreen';
+    }
   }
+
+  if (btnFullscreen) {
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+  }
+
+  if (btnExitFullscreen) {
+    btnExitFullscreen.addEventListener('click', toggleFullscreen);
+  }
+
+  // Sync state on native fullscreen change events
+  const onFullscreenChange = () => {
+    const isFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+    if (!isFs && playerContainer) {
+      playerContainer.classList.remove('is-fullscreen');
+    }
+    if (btnFullscreen) {
+      btnFullscreen.innerHTML = isFs ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+    }
+  };
+
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+  document.addEventListener('mozfullscreenchange', onFullscreenChange);
+  document.addEventListener('MSFullscreenChange', onFullscreenChange);
+
+  // Allow ESC key to exit CSS fallback fullscreen
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && playerContainer && playerContainer.classList.contains('is-fullscreen')) {
+      toggleFullscreen();
+    }
+  });
 
   if (btnTryLive && modal) {
     btnTryLive.addEventListener('click', () => {

@@ -2351,6 +2351,8 @@ html, body {
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-main);
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .video-viewport {
@@ -2367,8 +2369,116 @@ html, body {
 .guide-video-media {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  background: #000000;
+}
+
+/* ==========================================================================
+   FULLSCREEN VIDEO ADAPTATION FOR ALL DEVICES & RESOLUTIONS
+   ========================================================================== */
+.video-player-container:fullscreen,
+.video-player-container:-webkit-full-screen,
+.video-player-container:-moz-full-screen,
+.video-player-container:-ms-fullscreen,
+.video-player-container.is-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  background: #000000 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 9999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+}
+
+.video-player-container:fullscreen .video-viewport,
+.video-player-container:-webkit-full-screen .video-viewport,
+.video-player-container:-moz-full-screen .video-viewport,
+.video-player-container:-ms-fullscreen .video-viewport,
+.video-player-container.is-fullscreen .video-viewport {
+  flex: 1 !important;
+  width: 100vw !important;
+  height: calc(100vh - 56px) !important;
+  max-height: calc(100vh - 56px) !important;
+  aspect-ratio: auto !important;
+  background: #000000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 8px !important;
+}
+
+.video-player-container:fullscreen .guide-video-media,
+.video-player-container:-webkit-full-screen .guide-video-media,
+.video-player-container:-moz-full-screen .guide-video-media,
+.video-player-container:-ms-fullscreen .guide-video-media,
+.video-player-container.is-fullscreen .guide-video-media {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.btn-exit-fullscreen {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 9999px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.btn-exit-fullscreen:hover {
+  background: rgba(239, 68, 68, 0.95);
+  border-color: #ef4444;
+  transform: scale(1.04);
+}
+
+.video-player-container:fullscreen .btn-exit-fullscreen,
+.video-player-container:-webkit-full-screen .btn-exit-fullscreen,
+.video-player-container:-moz-full-screen .btn-exit-fullscreen,
+.video-player-container:-ms-fullscreen .btn-exit-fullscreen,
+.video-player-container.is-fullscreen .btn-exit-fullscreen {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+}
+
+.video-player-container:fullscreen .video-controls-bar,
+.video-player-container:-webkit-full-screen .video-controls-bar,
+.video-player-container:-moz-full-screen .video-controls-bar,
+.video-player-container:-ms-fullscreen .video-controls-bar,
+.video-player-container.is-fullscreen .video-controls-bar {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 12px 20px !important;
+  width: 100% !important;
+  flex-shrink: 0 !important;
 }
 
 .video-overlay-badge {
@@ -2386,6 +2496,7 @@ html, body {
   align-items: center;
   gap: 6px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 50;
 }
 
 .video-dot-live {

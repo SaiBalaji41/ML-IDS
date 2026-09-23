@@ -1581,24 +1581,27 @@
       <div class="video-modal-grid">
         
         <!-- Left: Video Player Box -->
-        <div class="video-player-container">
-          <div class="video-viewport">
+        <div class="video-player-container" id="videoPlayerContainer">
+          <div class="video-viewport" id="videoViewport">
             <img src="guide_video.webp" id="guideVideoElement" alt="Sentinel ML-IDS Walkthrough Video Guide" class="guide-video-media">
             
             <div class="video-overlay-badge">
               <span class="video-dot-live"></span>
               <span>1080p Recorded System Walkthrough</span>
             </div>
+
+            <!-- Floating Fullscreen Close Button (shown in fullscreen) -->
+            <button class="btn-exit-fullscreen" id="btnExitFullscreen" title="Exit Fullscreen">✕ Exit Fullscreen</button>
           </div>
 
           <!-- Video Controls Bar -->
-          <div class="video-controls-bar">
+          <div class="video-controls-bar" id="videoControlsBar">
             <div style="display:flex; align-items:center; gap:8px;">
               <button class="btn-video-ctrl" id="btnVideoReplay" title="Restart / Replay Video">🔁 Replay Video</button>
               <span class="video-duration-tag" id="videoTimelineText">Full SOC Tour & Interactive Testing</span>
             </div>
             <div style="display:flex; gap:6px;">
-              <button class="btn-video-ctrl" id="btnVideoFullscreen" title="Open Fullscreen View">⛶ Fullscreen</button>
+              <button class="btn-video-ctrl" id="btnVideoFullscreen" title="Toggle Fullscreen View">⛶ Fullscreen</button>
             </div>
           </div>
         </div>
